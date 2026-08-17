@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050508">
+<meta property="og:title" content="SY Academy — Free Fire Performance & Development">
+<meta property="og:description" content="Structured 3-month Free Fire training. Headshot & PvP or Esports track. Train, improve, dominate.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23050508'/%3E%3Ctext x='50' y='66' font-family='Arial' font-weight='900' font-size='54' fill='%23ff5a1f' text-anchor='middle'%3ESY%3C/text%3E%3C/svg%3E">
+<title>SY Academy — Free Fire Performance & Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050508;--panel:#0c0e15;--panel2:#101420;--line:rgba(255,255,255,.09);
+  --gold:#ffc400;--gold2:#ffdf67;--purple:#9a5cff;--green:#45e58b;--red:#ff4d67;
+  --ember:#ff5a1f;--ember2:#ff2d55;--hud:#37f2ff;
+  --text:#f5f7fb;--muted:#8d98a8;--max:1240px;--radius:20px;
+  --font-display:'Orbitron',sans-serif;--font-body:'Rajdhani',Inter,ui-sans-serif,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);font-weight:600;font-size:16.5px;background:
+radial-gradient(circle at 85% 0%,rgba(255,90,31,.14),transparent 30%),
+radial-gradient(circle at 5% 40%,rgba(154,92,255,.10),transparent 30%),
+radial-gradient(circle at 50% 100%,rgba(255,196,0,.06),transparent 40%),var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+a{text-decoration:none;color:inherit}button{font:inherit;cursor:pointer}
+::selection{background:var(--ember);color:#0a0a0a}
+::-webkit-scrollbar{width:9px}::-webkit-scrollbar-track{background:#07080c}::-webkit-scrollbar-thumb{background:linear-gradient(var(--ember),var(--gold));border-radius:10px}
+.container{width:min(var(--max),92%);margin:auto}
+
+/* ===== Loader ===== */
+#loader{position:fixed;inset:0;background:#050508;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .6s ease, visibility .6s ease}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none}
+.loadlogo{font-family:var(--font-display);font-size:34px;font-weight:900;letter-spacing:4px;color:#fff}
+.loadlogo span{color:var(--ember)}
+.loadbar{width:220px;height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.loadbar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--ember),var(--gold));animation:loadfill 1.1s ease forwards;border-radius:3px}
+@keyframes loadfill{to{width:100%}}
+.loadtxt{font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase}
+
+/* ===== Ember particle canvas ===== */
+#embers{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55}
+
+/* ===== Nav ===== */
+.nav{height:76px;border-bottom:1px solid var(--line);background:rgba(5,5,8,.72);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;box-shadow:0 1px 0 rgba(255,90,31,.08)}
+.navin{height:100%;display:flex;align-items:center;justify-content:space-between;gap:18px;position:relative;z-index:2}
+.logo{font-family:var(--font-display);font-weight:900;line-height:.78;font-size:26px;letter-spacing:0px;display:flex;align-items:center;gap:2px}
+.logo b{color:var(--ember);text-shadow:0 0 18px rgba(255,90,31,.6)}.logo small{display:block;font-size:8px;letter-spacing:3px;color:var(--gold);margin-left:6px;margin-top:5px;font-family:var(--font-body)}
+.links{display:flex;gap:4px;align-items:center}.links a{padding:10px 12px;border-radius:10px;font-size:12.5px;font-weight:700;letter-spacing:.4px;color:#b8c0cc;transition:.2s;position:relative}
+.links a:hover,.links a.active{color:#fff;background:rgba(255,90,31,.1)}
+.links a.active:after{content:"";position:absolute;left:12px;right:12px;bottom:4px;height:2px;background:linear-gradient(90deg,var(--ember),var(--gold));border-radius:2px;box-shadow:0 0 8px var(--ember)}
+.cta{border:0;background:linear-gradient(135deg,var(--ember),var(--gold));color:#0a0700;padding:12px 18px;border-radius:11px;font-weight:800;font-size:13px;letter-spacing:.3px;box-shadow:0 8px 30px rgba(255,90,31,.28);position:relative;overflow:hidden;transition:transform .2s ease, box-shadow .2s ease}
+.cta:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(255,90,31,.4)}
+.cta:active{transform:translateY(0)}
+.menu{display:none;background:none;border:1px solid var(--line);color:#fff;padding:9px;border-radius:10px}
+
+.page{display:none;animation:in .45s cubic-bezier(.2,.8,.2,1)}.page.active{display:block}@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ===== Hero ===== */
+.hero{min-height:670px;display:grid;grid-template-columns:1.03fr .97fr;align-items:center;gap:30px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:5% 35% 10% -20%;background:radial-gradient(circle,rgba(255,90,31,.18),transparent 60%);pointer-events:none}
+.kicker{display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,90,31,.3);padding:7px 12px;border-radius:999px;color:var(--gold2);font-size:11px;font-weight:800;letter-spacing:1px;background:rgba(255,90,31,.06)}
+.kicker i{width:7px;height:7px;border-radius:50%;background:var(--ember);box-shadow:0 0 10px var(--ember);animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+h1{font-family:var(--font-display);font-size:clamp(42px,6.4vw,78px);line-height:.95;letter-spacing:-1px;margin:22px 0 20px;max-width:800px;text-transform:uppercase}
+h1 .glitch{position:relative;color:var(--ember);text-shadow:0 0 30px rgba(255,90,31,.35);display:inline-block}
+h1 .glitch:before,h1 .glitch:after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden;background:transparent}
+h1 .glitch:before{color:var(--hud);clip-path:inset(0 0 55% 0);animation:glitch1 4.5s infinite linear}
+h1 .glitch:after{color:var(--gold);clip-path:inset(55% 0 0 0);animation:glitch2 4.5s infinite linear}
+@keyframes glitch1{0%,92%,100%{transform:translate(0,0)}93%{transform:translate(-2px,1px)}95%{transform:translate(2px,-1px)}97%{transform:translate(-1px,0)}}
+@keyframes glitch2{0%,92%,100%{transform:translate(0,0)}93%{transform:translate(2px,-1px)}95%{transform:translate(-2px,1px)}97%{transform:translate(1px,0)}}
+.lead{color:#aab4c2;line-height:1.6;max-width:600px;font-size:17px;font-weight:600}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.ghost{background:rgba(255,255,255,.03);color:#fff;border:1px solid var(--line);padding:12px 18px;border-radius:11px;font-weight:700;font-size:13px;transition:.2s}
+.ghost:hover{border-color:rgba(255,196,0,.5);background:rgba(255,196,0,.06)}
+.hero-art{height:520px;border:1px solid rgba(255,90,31,.22);border-radius:30px;position:relative;overflow:hidden;background:
+linear-gradient(145deg,rgba(255,90,31,.14),transparent 35%),
+radial-gradient(circle at 70% 25%,rgba(154,92,255,.28),transparent 30%),
+#0a0c12;box-shadow:0 25px 90px rgba(0,0,0,.55), inset 0 0 60px rgba(255,90,31,.06)}
+.hero-art:before{content:"SY";font-family:var(--font-display);position:absolute;font-size:260px;font-weight:900;color:rgba(255,255,255,.03);right:-30px;bottom:-60px}
+.hero-art .scan{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(55,242,255,.55),transparent);animation:scan 3.2s linear infinite}
+@keyframes scan{0%{top:0%}100%{top:100%}}
+.character{position:absolute;inset:0;background:
+radial-gradient(ellipse at 60% 30%,rgba(255,213,76,.4),transparent 22%),
+linear-gradient(120deg,transparent 45%,rgba(255,90,31,.16) 46%,transparent 47%),
+linear-gradient(180deg,transparent 40%,rgba(0,0,0,.75));}
+.character:after{content:"TRAIN • IMPROVE • DOMINATE";position:absolute;bottom:35px;left:28px;color:#fff;font-size:11px;font-weight:800;letter-spacing:4px;font-family:var(--font-body)}
+.corner{position:absolute;width:22px;height:22px;border-color:var(--ember);opacity:.65}
+.corner.tl{top:14px;left:14px;border-top:2px solid;border-left:2px solid}
+.corner.br{bottom:14px;right:14px;border-bottom:2px solid;border-right:2px solid}
+.float{position:absolute;padding:14px 16px;border:1px solid var(--line);background:rgba(10,10,15,.82);backdrop-filter:blur(16px);border-radius:14px;font-size:11px;box-shadow:0 15px 40px #000a;animation:floaty 5s ease-in-out infinite}
+.float b{display:block;font-size:19px;color:var(--ember);font-family:var(--font-display)}.f1{top:24px;right:22px;animation-delay:0s}.f2{bottom:78px;right:20px;animation-delay:1.2s}.f3{top:190px;left:20px;animation-delay:.6s}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.trust{display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--line);background:rgba(255,255,255,.015);position:relative;z-index:1}
+.trust div{padding:22px;border-right:1px solid var(--line);transition:.25s}.trust div:hover{background:rgba(255,90,31,.05)}.trust b{display:block;font-family:var(--font-body);font-weight:800}.trust span{font-size:11px;color:var(--muted)}
+
+/* ===== Member counter banner (first thing visible on Home) ===== */
+.memberbanner{padding:14px 0 0}
+.memberbanner-inner{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:15px 24px;border:1px solid rgba(255,196,0,.4);border-radius:16px;position:relative;overflow:hidden;
+ background:linear-gradient(90deg,rgba(255,90,31,.14),rgba(255,196,0,.1),rgba(154,92,255,.14),rgba(255,90,31,.14));background-size:300% 100%;animation:memberflow 8s linear infinite;
+ box-shadow:0 0 40px rgba(255,196,0,.08), inset 0 0 0 1px rgba(255,255,255,.02)}
+@keyframes memberflow{0%{background-position:0% 0}100%{background-position:300% 0}}
+.memberpulse{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.4s infinite;flex-shrink:0}
+.membertext{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;justify-content:center}
+.memberlabel{font-size:11px;letter-spacing:2px;color:var(--muted);font-weight:800;text-transform:uppercase}
+.membertext strong{font-family:var(--font-display);font-size:28px;font-weight:900;color:var(--gold2);text-shadow:0 0 18px rgba(255,196,0,.45);letter-spacing:.5px}
+.membersuffix{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.memberedit{margin-left:6px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#fff;font-size:10px;font-weight:800;letter-spacing:.5px;padding:6px 10px;border-radius:8px;text-transform:uppercase;transition:.2s}
+.memberedit:hover{border-color:var(--ember);background:rgba(255,90,31,.12)}
+@media(max-width:560px){.membertext strong{font-size:22px}.memberbanner-inner{padding:13px 16px;flex-direction:column;gap:8px;text-align:center}}
+
+.section{padding:80px 0;position:relative;z-index:1}
+.eyebrow{color:var(--ember);font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.eyebrow:before{content:"";width:16px;height:1px;background:var(--ember)}
+.title{font-family:var(--font-display);font-size:clamp(28px,3.6vw,46px);letter-spacing:-.5px;margin:10px 0 12px;text-transform:uppercase}
+.sub{color:var(--muted);max-width:650px;line-height:1.65}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.014));border-radius:var(--radius);padding:26px;position:relative;overflow:hidden;transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease}
+.card:before{content:"";position:absolute;width:170px;height:170px;right:-90px;top:-90px;border-radius:50%;background:rgba(255,90,31,.08);transition:.3s}
+.card:hover{transform:translateY(-6px);border-color:rgba(255,90,31,.4);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.card:hover:before{background:rgba(255,90,31,.16)}
+.track h3{font-family:var(--font-display);font-size:22px;letter-spacing:.5px}.track p{color:var(--muted);line-height:1.6;margin:10px 0 18px}.track ul,.plan ul{list-style:none;display:grid;gap:9px}.track li,.plan li{font-size:13.5px;color:#c5ccd7;font-weight:600}.track li:before,.plan li:before{content:"✓";color:var(--ember);font-weight:900;margin-right:9px}
+.purple{border-color:rgba(154,92,255,.35)}.purple .trackicon{background:rgba(154,92,255,.15);color:#c49cff}.gold{border-color:rgba(255,90,31,.32)}
+.trackicon{width:46px;height:46px;border-radius:14px;background:rgba(255,90,31,.12);color:var(--ember);display:grid;place-items:center;font-size:22px;margin-bottom:22px}
+
+.price{font-family:var(--font-display);font-size:34px;font-weight:900;margin:12px 0}.price small{font-size:11px;color:var(--muted);font-weight:700;font-family:var(--font-body)}.plan{min-height:420px}.plan.vip{border-color:rgba(255,90,31,.5);box-shadow:0 0 60px rgba(255,90,31,.08)}.plan.special{border-color:rgba(154,92,255,.4)}
+.badge{position:absolute;top:18px;right:18px;font-size:9px;font-weight:900;letter-spacing:1px;padding:6px 8px;border-radius:999px;background:linear-gradient(135deg,var(--ember),var(--gold));color:#090a0d}.badge.p{background:var(--purple);color:#fff}
+.plan .bottom{position:absolute;left:26px;right:26px;bottom:26px}.plan .bottom button{width:100%}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;border:1px solid var(--line);border-radius:18px;overflow:hidden}.stat{padding:25px;background:rgba(255,255,255,.025);transition:.25s}.stat:hover{background:rgba(255,90,31,.06)}.stat strong{display:block;font-family:var(--font-display);font-size:30px;color:var(--ember)}.stat span{font-size:11px;color:var(--muted)}
+
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:18px}.table{width:100%;border-collapse:collapse;min-width:760px}.table th,.table td{padding:15px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}.table th{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}.table tr{transition:.2s}.table tbody tr:hover{background:rgba(255,90,31,.05)}.rank{font-family:var(--font-display);font-size:18px;font-weight:900;color:var(--ember)}
+.notice{padding:15px 17px;border:1px solid rgba(255,90,31,.22);background:rgba(255,90,31,.05);border-radius:13px;color:#cdd3dd;font-size:12.5px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{padding:22px;border:1px solid var(--line);border-radius:16px;background:#0a0c11;transition:.25s}.step:hover{border-color:rgba(255,90,31,.4);transform:translateY(-4px)}.step i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(255,90,31,.12);color:var(--ember);font-style:normal;font-weight:900;margin-bottom:12px;font-family:var(--font-display);font-size:13px}
+.footer{border-top:1px solid var(--line);padding:45px 0;color:var(--muted);font-size:12.5px;position:relative;z-index:1}.footergrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px}.footer h4{color:#fff;margin-bottom:13px;font-family:var(--font-display);font-size:12px;letter-spacing:1px}.footer a{display:block;margin:8px 0;transition:.2s}.footer a:hover{color:var(--ember)}
+.form{display:grid;gap:13px;max-width:650px}.input{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:11px;background:#08090d;color:#fff;outline:none;font-family:var(--font-body);font-weight:600;transition:.2s}.input:focus{border-color:rgba(255,90,31,.6);box-shadow:0 0 0 3px rgba(255,90,31,.1)}textarea.input{min-height:130px;resize:vertical}
+.adminbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.adminbar button{padding:10px 13px;border:1px solid var(--line);background:#0c0f16;color:#fff;border-radius:10px;font-weight:700;transition:.2s}.adminbar button:hover{border-color:var(--ember);background:rgba(255,90,31,.08)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}.modal.show{display:flex}.modalbox{width:min(480px,100%);background:#0c0f16;border:1px solid var(--line);border-radius:20px;padding:25px;box-shadow:0 30px 100px #000;animation:in .3s ease}
+.modalbox h2{font-family:var(--font-display);font-size:20px;text-transform:uppercase}
+.toast{position:fixed;bottom:22px;right:22px;background:#0e1119;border:1px solid rgba(255,90,31,.35);padding:13px 16px;border-radius:12px;display:none;z-index:200;font-size:12.5px;font-weight:600;box-shadow:0 10px 40px rgba(0,0,0,.5)}.toast.show{display:block;animation:toastin .3s ease}
+@keyframes toastin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(max-width:900px){.links{display:none}.menu{display:block}.hero{grid-template-columns:1fr;padding:45px 0}.hero-art{height:360px}.trust,.stats{grid-template-columns:1fr 1fr}.grid2,.grid3{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.footergrid{grid-template-columns:1fr 1fr}
+  .links{flex-direction:column;align-items:stretch;gap:2px;position:absolute;top:76px;left:0;right:0;background:rgba(6,7,11,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--line);padding:10px;animation:menuIn .28s cubic-bezier(.2,.8,.2,1)}
+  .links a{padding:13px 14px}
+}
+@keyframes menuIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media(max-width:560px){h1{letter-spacing:0px}.trust,.stats,.steps{grid-template-columns:1fr}.hero-art{height:300px}.section{padding:55px 0}.card{padding:21px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+
+/* ===== Premium enhancement layer (visual only — no logic/route/data changes) ===== */
+.loadpct{font-size:11px;letter-spacing:2px;color:var(--gold2);font-family:var(--font-display);font-weight:700}
+
+/* zone-shrink signature (Free Fire safe-zone motif) inside hero-art */
+.zonewrap{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:1}
+.zonering{position:absolute;border-radius:50%;box-shadow:0 0 30px rgba(55,242,255,.08) inset}
+.zonering.r1{width:94%;height:94%;border:1px solid rgba(55,242,255,.32);animation:zonepulse 6s ease-in-out infinite}
+.zonering.r2{width:64%;height:64%;border:1px solid rgba(255,196,0,.4);animation:zonepulse 6s ease-in-out infinite .5s}
+.zonering.r3{width:32%;height:32%;border:1.5px dashed rgba(255,90,31,.6);animation:zoneshrink 6s ease-in-out infinite}
+@keyframes zonepulse{0%,100%{opacity:.3}50%{opacity:.8}}
+@keyframes zoneshrink{0%,100%{transform:scale(1)}50%{transform:scale(.8)}}
+.zonecenter{width:7px;height:7px;border-radius:50%;background:var(--ember);box-shadow:0 0 16px var(--ember),0 0 46px var(--ember)}
+.zonewrap .tick{position:absolute;font-family:var(--font-display);font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.35);top:8px;left:50%;transform:translateX(-50%)}
+
+/* card sheen sweep on hover (uses existing :after slot on .card) */
+.card{isolation:isolate}
+.card:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.07) 45%,transparent 60%);transform:translateX(-130%);transition:transform .85s cubic-bezier(.2,.8,.2,1);pointer-events:none;z-index:1}
+.card:hover:after{transform:translateX(130%)}
+
+/* leaderboard medal glow for top 3 — pure CSS, no JS/data change */
+#leaderRows tr:nth-child(1){background:linear-gradient(90deg,rgba(255,215,0,.07),transparent)}
+#leaderRows tr:nth-child(2){background:linear-gradient(90deg,rgba(201,211,222,.05),transparent)}
+#leaderRows tr:nth-child(3){background:linear-gradient(90deg,rgba(224,153,77,.05),transparent)}
+#leaderRows tr:nth-child(1) .rank{color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,.55)}
+#leaderRows tr:nth-child(2) .rank{color:#d7dee6;text-shadow:0 0 12px rgba(201,211,222,.45)}
+#leaderRows tr:nth-child(3) .rank{color:#e0994d;text-shadow:0 0 12px rgba(224,153,77,.45)}
+
+/* button ripple */
+.cta,.ghost{position:relative;overflow:hidden}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);pointer-events:none;animation:rippleOut .6s ease-out forwards}
+@keyframes rippleOut{to{transform:scale(2.6);opacity:0}}
+
+/* premium cursor ring (desktop only) */
+.cursor-ring{position:fixed;width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,90,31,.55);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:opacity .25s,width .2s,height .2s,background .2s;mix-blend-mode:screen}
+.cursor-ring.active{width:34px;height:34px;background:rgba(255,90,31,.12);border-color:rgba(255,196,0,.6)}
+@media(hover:none),(pointer:coarse){.cursor-ring{display:none}}
+
+/* section fade-reveal */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+
+/* countdown widget */
+.countdown{display:flex;gap:10px;margin-top:22px}
+.countdown div{text-align:center;min-width:58px;padding:10px 6px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)}
+.countdown b{display:block;font-family:var(--font-display);font-size:22px;color:var(--gold2)}
+.countdown span{font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
+
+/* hero-art parallax tilt */
+.hero-art{transition:transform .15s ease-out}
+
+/* weapon-select style track card hover */
+.card.track{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.card.track:hover{border-color:rgba(255,196,0,.55);box-shadow:0 0 0 1px rgba(255,196,0,.15) inset,0 20px 50px rgba(0,0,0,.45)}
+.card.track:hover .trackicon{background:rgba(255,196,0,.18);color:var(--gold2);box-shadow:0 0 22px rgba(255,196,0,.35)}
+.card.track .trackicon{transition:.25s}
+.card.track:before{transition:transform .4s ease,background .25s ease}
+.card.track:hover:before{transform:scale(1.4)}
+
+/* =========================================================
+   SY ACADEMY // PEAK VISUAL LAYER
+   Added as a non-destructive enhancement layer.
+   Existing routes, package logic and data model remain intact.
+   ========================================================= */
+:root{
+  --peak-cyan:#37f2ff;
+  --peak-orange:#ff5a1f;
+  --peak-yellow:#ffc400;
+  --peak-violet:#9a5cff;
+}
+body:before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;z-index:3;
+  opacity:.055;
+  background-image:
+    linear-gradient(rgba(255,255,255,.35) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.35) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:linear-gradient(to bottom,black,transparent 82%);
+}
+body:after{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;z-index:4;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 4px);
+  mix-blend-mode:overlay;opacity:.3;
+}
+#peakProgress{
+  position:fixed;left:0;top:0;height:2px;width:0;z-index:1000;
+  background:linear-gradient(90deg,var(--peak-orange),var(--peak-yellow),var(--peak-cyan));
+  box-shadow:0 0 14px var(--peak-orange);
+}
+.peak-ticker{
+  position:relative;z-index:45;height:31px;display:flex;align-items:center;
+  overflow:hidden;border-bottom:1px solid rgba(255,255,255,.05);
+  background:rgba(3,5,8,.86);white-space:nowrap;
+}
+.peak-ticker-track{
+  display:flex;gap:42px;min-width:max-content;
+  animation:peakTicker 32s linear infinite;
+  color:#87919f;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:800;
+}
+.peak-ticker b{color:var(--peak-yellow)}
+@keyframes peakTicker{to{transform:translateX(-50%)}}
+.peak-live{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:4px 9px;border:1px solid rgba(69,229,139,.2);
+  border-radius:99px;color:#b9ffd5;background:rgba(69,229,139,.04)
+}
+.peak-live i{width:6px;height:6px;border-radius:50%;background:#45e58b;box-shadow:0 0 10px #45e58b}
+.nav{transition:height .25s ease,background .25s ease}
+.nav.scrolled{height:66px;background:rgba(4,5,8,.9);box-shadow:0 12px 35px rgba(0,0,0,.28)}
+.navin:after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--peak-orange),var(--peak-yellow),transparent);
+  opacity:.22;
+}
+.hero{
+  min-height:720px;
+}
+.hero:after{
+  content:"";position:absolute;width:560px;height:560px;border-radius:50%;
+  right:-280px;top:40px;border:1px solid rgba(55,242,255,.08);
+  box-shadow:0 0 80px rgba(55,242,255,.03),inset 0 0 80px rgba(55,242,255,.02);
+  pointer-events:none;
+}
+.hero-art{
+  box-shadow:0 30px 100px rgba(0,0,0,.68),inset 0 0 100px rgba(255,90,31,.08);
+}
+.hero-art:after{
+  content:"TACTICAL // PERFORMANCE // DEVELOPMENT";
+  position:absolute;right:20px;bottom:18px;z-index:3;
+  color:rgba(55,242,255,.48);font:700 8px/1 var(--font-display);
+  letter-spacing:2px;writing-mode:vertical-rl;transform:rotate(180deg)
+}
+.peak-hud{
+  position:absolute;inset:18px;z-index:4;pointer-events:none;
+  border:1px solid rgba(55,242,255,.08);border-radius:18px;
+}
+.peak-hud:before,.peak-hud:after{
+  content:"";position:absolute;width:44px;height:44px;
+  border-color:rgba(55,242,255,.55);opacity:.7
+}
+.peak-hud:before{left:-1px;top:-1px;border-left:1px solid;border-top:1px solid}
+.peak-hud:after{right:-1px;bottom:-1px;border-right:1px solid;border-bottom:1px solid}
+.peak-hud-label{
+  position:absolute;top:12px;left:15px;font:700 8px/1 var(--font-display);
+  letter-spacing:2px;color:rgba(55,242,255,.65)
+}
+.peak-hud-status{
+  position:absolute;right:15px;top:12px;font-size:8px;letter-spacing:1.5px;color:#9ca7b5
+}
+.peak-hud-status b{color:#45e58b}
+.peak-radar{
+  position:absolute;width:150px;height:150px;left:50%;top:50%;
+  transform:translate(-50%,-50%);border-radius:50%;
+  border:1px solid rgba(55,242,255,.16);z-index:2;pointer-events:none
+}
+.peak-radar:before,.peak-radar:after{
+  content:"";position:absolute;inset:18%;border-radius:50%;
+  border:1px solid rgba(55,242,255,.11)
+}
+.peak-radar:after{inset:49%}
+.peak-radar span{
+  position:absolute;left:50%;top:50%;width:48%;height:1px;
+  transform-origin:left center;background:linear-gradient(90deg,rgba(55,242,255,.7),transparent);
+  animation:radarSweep 3.5s linear infinite
+}
+@keyframes radarSweep{to{transform:rotate(360deg)}}
+.peak-chip-row{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:20px
+}
+.peak-chip{
+  padding:7px 10px;border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;background:rgba(255,255,255,.025);
+  color:#9ea8b6;font-size:9px;letter-spacing:1.3px;text-transform:uppercase
+}
+.peak-chip b{color:#fff}
+.peak-chip.orange{border-color:rgba(255,90,31,.2)}
+.peak-chip.cyan{border-color:rgba(55,242,255,.18)}
+.peak-chip.violet{border-color:rgba(154,92,255,.22)}
+.section .title{position:relative}
+.section .title:after{
+  content:"";display:block;width:70px;height:2px;margin-top:15px;
+  background:linear-gradient(90deg,var(--peak-orange),transparent)
+}
+.card,.step,.stat,.trust>div{
+  will-change:transform;
+}
+.card{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 10px 35px rgba(0,0,0,.15)
+}
+.card:hover{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 24px 65px rgba(0,0,0,.48),0 0 0 1px rgba(255,90,31,.06)
+}
+.card .peak-corner{
+  position:absolute;width:14px;height:14px;right:12px;bottom:12px;
+  border-right:1px solid rgba(55,242,255,.35);border-bottom:1px solid rgba(55,242,255,.35)
+}
+.plan{
+  background:
+    radial-gradient(circle at 100% 0,rgba(255,90,31,.08),transparent 28%),
+    linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.012))
+}
+.plan.vip{
+  background:
+    radial-gradient(circle at 50% 0,rgba(255,196,0,.12),transparent 32%),
+    linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.012))
+}
+.plan.special{
+  background:
+    radial-gradient(circle at 100% 0,rgba(154,92,255,.14),transparent 32%),
+    linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.012))
+}
+.peak-plan-line{
+  height:2px;width:100%;margin:16px 0 20px;
+  background:linear-gradient(90deg,transparent,var(--peak-orange),transparent);
+  opacity:.55
+}
+.plan.vip .peak-plan-line{background:linear-gradient(90deg,transparent,var(--peak-yellow),transparent)}
+.plan.special .peak-plan-line{background:linear-gradient(90deg,transparent,var(--peak-violet),transparent)}
+.tablewrap{
+  box-shadow:0 20px 60px rgba(0,0,0,.28),inset 0 0 50px rgba(255,90,31,.02)
+}
+.table thead{
+  background:linear-gradient(90deg,rgba(255,90,31,.08),rgba(55,242,255,.025),transparent)
+}
+.table tbody tr{
+  position:relative;
+}
+.table tbody tr td:first-child{
+  position:relative;
+}
+.table tbody tr:nth-child(1) td:first-child:after,
+.table tbody tr:nth-child(2) td:first-child:after,
+.table tbody tr:nth-child(3) td:first-child:after{
+  content:"";position:absolute;left:0;top:12px;width:3px;height:18px;border-radius:3px;
+  background:var(--peak-yellow);box-shadow:0 0 12px rgba(255,196,0,.5)
+}
+.peak-session-card{
+  display:grid;grid-template-columns:1.2fr .8fr;gap:22px;margin-top:30px;
+  border:1px solid rgba(255,90,31,.22);border-radius:20px;overflow:hidden;
+  background:
+    radial-gradient(circle at 90% 20%,rgba(55,242,255,.09),transparent 30%),
+    linear-gradient(135deg,rgba(255,90,31,.07),rgba(255,255,255,.02))
+}
+.peak-session-main{padding:28px}
+.peak-session-side{
+  padding:28px;border-left:1px solid var(--line);
+  background:rgba(255,255,255,.018)
+}
+.peak-progress{
+  height:8px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-top:13px
+}
+.peak-progress i{
+  display:block;width:33%;height:100%;
+  background:linear-gradient(90deg,var(--peak-orange),var(--peak-yellow));
+  box-shadow:0 0 15px rgba(255,90,31,.45);border-radius:99px
+}
+.peak-progress-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:7px}
+.peak-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+.peak-status-box{
+  padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.14)
+}
+.peak-status-box small{display:block;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase}
+.peak-status-box b{display:block;margin-top:4px;color:#fff;font-size:13px}
+.peak-quote{
+  margin-top:26px;padding:20px 22px;border-left:2px solid var(--peak-orange);
+  background:linear-gradient(90deg,rgba(255,90,31,.06),transparent);
+  color:#cdd4df;font-style:italic;line-height:1.7
+}
+.peak-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+.peak-mini{
+  padding:17px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025)
+}
+.peak-mini strong{display:block;font:900 18px var(--font-display);color:var(--peak-yellow)}
+.peak-mini span{display:block;color:var(--muted);font-size:10px;margin-top:5px}
+.peak-announcement{
+  position:relative;padding-left:20px
+}
+.peak-announcement:before{
+  content:"";position:absolute;left:0;top:2px;width:2px;height:calc(100% - 4px);
+  background:linear-gradient(var(--peak-orange),transparent)
+}
+.peak-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:7px;
+  font-size:8px;letter-spacing:1.2px;text-transform:uppercase;font-weight:900;
+  background:rgba(255,90,31,.08);border:1px solid rgba(255,90,31,.18);color:var(--peak-yellow)
+}
+.peak-badge i{width:5px;height:5px;border-radius:50%;background:var(--peak-orange);box-shadow:0 0 7px var(--peak-orange)}
+.peak-command{
+  position:fixed;inset:0;z-index:300;display:none;align-items:flex-start;justify-content:center;
+  padding-top:12vh;background:rgba(0,0,0,.68);backdrop-filter:blur(12px)
+}
+.peak-command.show{display:flex}
+.peak-command-box{
+  width:min(680px,92%);border:1px solid rgba(255,90,31,.28);border-radius:20px;
+  background:#0a0d13;box-shadow:0 40px 120px #000;
+  overflow:hidden
+}
+.peak-command-head{padding:18px;border-bottom:1px solid var(--line)}
+.peak-command-input{
+  width:100%;border:0;outline:0;background:transparent;color:#fff;font:700 16px var(--font-body)
+}
+.peak-command-list{padding:8px;max-height:420px;overflow:auto}
+.peak-command-item{
+  display:flex;align-items:center;justify-content:space-between;padding:13px 14px;
+  border-radius:10px;color:#cbd2dd;cursor:pointer
+}
+.peak-command-item:hover,.peak-command-item.sel{background:rgba(255,90,31,.09);color:#fff}
+.peak-command-item kbd{font-size:9px;color:#687382;border:1px solid var(--line);padding:3px 6px;border-radius:5px}
+.peak-command-help{padding:10px 18px;border-top:1px solid var(--line);font-size:9px;color:#667181;letter-spacing:1px}
+.peak-toast{
+  position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);
+  z-index:400;padding:11px 15px;border:1px solid rgba(55,242,255,.22);
+  background:rgba(7,11,16,.94);border-radius:10px;color:#d8e1eb;font-size:11px;
+  opacity:0;pointer-events:none;transition:.25s;box-shadow:0 15px 45px #000
+}
+.peak-toast.show{opacity:1;transform:translate(-50%,0)}
+.peak-mobile-menu{
+  display:none;position:absolute;left:0;right:0;top:100%;padding:10px;
+  background:rgba(5,6,9,.97);border-bottom:1px solid rgba(255,90,31,.2);
+  box-shadow:0 25px 50px rgba(0,0,0,.5)
+}
+.peak-mobile-menu.show{display:grid}
+.peak-mobile-menu a{padding:13px;border-radius:10px;color:#b8c0cc;font-weight:800;font-size:12px}
+.peak-mobile-menu a:hover{background:rgba(255,90,31,.08);color:#fff}
+.peak-mobile-menu .cta{margin-top:5px;text-align:center}
+@media(max-width:900px){
+  .peak-session-card{grid-template-columns:1fr}
+  .peak-session-side{border-left:0;border-top:1px solid var(--line)}
+  .peak-mini-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .hero{min-height:640px}
+  .peak-session-main,.peak-session-side{padding:21px}
+  .peak-radar{width:110px;height:110px}
+  .peak-ticker{height:27px}
+  .peak-ticker-track{font-size:8px}
+}
+
+
+/* SY ACADEMY ELITE COMMAND LAYER */
+.elite-recruit{margin-top:28px;border:1px solid rgba(255,75,43,.2);border-radius:22px;overflow:hidden;background:radial-gradient(circle at 82% 18%,rgba(59,231,255,.08),transparent 28%),#080c12;box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.elite-head{padding:22px 25px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.elite-head small{display:block;color:#687482;font-size:8px;letter-spacing:2px;font-weight:900}.elite-head h3{margin-top:5px;font-size:18px}.elite-live{display:flex;gap:7px;align-items:center;color:#baffd9;font-size:9px;font-weight:900;letter-spacing:1.5px}.elite-live i{width:6px;height:6px;background:#42f59b;border-radius:50%;box-shadow:0 0 12px #42f59b;animation:elitePulse 1.5s infinite}@keyframes elitePulse{50%{opacity:.35;transform:scale(.65)}}
+.elite-numbers{display:grid;grid-template-columns:repeat(4,1fr)}.elite-number{padding:24px;border-right:1px solid var(--line)}.elite-number:last-child{border-right:0}.elite-number strong{display:block;font-size:clamp(28px,4vw,45px);line-height:1;font-weight:1000;letter-spacing:-2px}.elite-number:nth-child(2) strong{color:#ff4b2b}.elite-number:nth-child(3) strong{color:#3be7ff}.elite-number:nth-child(4) strong{color:#42f59b}.elite-number span{display:block;margin-top:8px;color:#7c8795;font-size:9px;letter-spacing:1.5px;text-transform:uppercase}.elite-progress{height:4px;background:#141b24}.elite-progress i{display:block;height:100%;width:72%;background:linear-gradient(90deg,#ff4b2b,#ffc400,#3be7ff);box-shadow:0 0 14px rgba(59,231,255,.3)}.elite-terminal{padding:16px 22px;background:#05080c;border-top:1px solid rgba(255,255,255,.04);font:10px/1.8 ui-monospace,SFMono-Regular,Menlo,monospace;color:#738090}.elite-terminal b{color:#42f59b}.elite-terminal em{color:#ffcc57;font-style:normal}.elite-founder{margin-top:18px;padding:17px 19px;border:1px solid rgba(255,196,0,.14);border-radius:15px;display:flex;justify-content:space-between;align-items:center;gap:15px;background:rgba(255,196,0,.025)}.elite-founder span{color:#7e8996;font-size:10px}.elite-founder b{color:#fff}.elite-founder-mark{font-weight:1000;font-size:18px;color:#ffc400}.elite-verify{display:inline-flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid rgba(66,245,155,.16);border-radius:7px;color:#9cffc7;font-size:8px;font-weight:900;letter-spacing:1px}.elite-verify i{width:5px;height:5px;background:#42f59b;border-radius:50%}.elite-hall{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:25px}.elite-hall-card{padding:22px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.01));overflow:hidden}.elite-medal{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#191d25,#090d13);border:1px solid rgba(255,196,0,.22);color:#ffc400;font-weight:1000;font-size:18px;margin-bottom:17px}.elite-hall-card h3{font-size:17px}.elite-hall-card p{margin-top:6px;color:#76818e;font-size:11px}.elite-hall-card b{display:block;color:#ffc400;margin-top:17px;font-size:10px;letter-spacing:1px}@media(max-width:800px){.elite-numbers{grid-template-columns:1fr 1fr}.elite-number:nth-child(2){border-right:0}.elite-number{border-bottom:1px solid var(--line)}.elite-hall{grid-template-columns:1fr 1fr}}@media(max-width:520px){.elite-head{align-items:flex-start;flex-direction:column}.elite-hall{grid-template-columns:1fr}.elite-number{padding:18px}}
+</style>
+</head>
+<body>
+
+<div id="loader"><div class="loadlogo">S<span>Y</span> ACADEMY</div><div class="loadbar"><i></i></div><div class="loadpct" id="loadpct">0%</div><div class="loadtxt">Loading Session</div></div>
+<canvas id="embers"></canvas>
+
+<header class="nav">
+  <div class="container navin">
+    <a class="logo" href="#home">S<b>Y</b><small>ACADEMY</small></a>
+    <nav class="links">
+      <a data-route="home" href="#home">HOME</a><a data-route="about" href="#about">ABOUT</a>
+      <a data-route="training" href="#training">TRAINING</a><a data-route="packages" href="#packages">PACKAGES</a>
+      <a data-route="leaderboard" href="#leaderboard">LEADERBOARD</a><a data-route="graduates" href="#graduates">GRADUATES</a>
+      <a data-route="academy" href="#academy">ACADEMY</a><a data-route="announcements" href="#announcements">ANNOUNCEMENTS</a>
+      <a data-route="contact" href="#contact">CONTACT</a>
+    </nav>
+    <button class="cta" onclick="register()">REGISTER NOW ↗</button>
+    <button class="menu" onclick="toggleMenu()">☰</button>
+  </div>
+</header>
+
+<main>
+<section id="home" class="page active">
+  <div class="container memberbanner"><div class="memberbanner-inner"><span class="memberpulse"></span><div class="membertext"><span class="memberlabel">Members Joined The Academy</span><strong id="totalMembersCount">0</strong><span class="membersuffix">and growing</span></div><button class="memberedit" id="memberEditBtn" style="display:none" onclick="editTotalMembers()">Edit</button></div></div>
+
+  <div class="container hero">
+    <div>
+      <div class="kicker"><i></i> SESSION 06 • APR — JUN 2026</div>
+      <h1>BUILD SKILL.<br><span class="glitch" data-text="BUILD LEGENDS.">BUILD LEGENDS.</span></h1>
+      <p class="lead">SY Academy is a structured Free Fire performance program for players who want to master Headshot & PvP or develop into disciplined competitive esports players.</p>
+      <div class="countdown" id="countdown"><div><b id="cdD">00</b><span>Days</span></div><div><b id="cdH">00</b><span>Hrs</span></div><div><b id="cdM">00</b><span>Min</span></div><div><b id="cdS">00</b><span>Sec</span></div></div>
+      <div class="actions"><button class="cta" onclick="register()">START YOUR JOURNEY ↗</button><a class="ghost" href="#academy">HOW IT WORKS →</a></div>
+    </div>
+    <div class="hero-art"><div class="scan"></div><div class="corner tl"></div><div class="corner br"></div><div class="character"></div><div class="zonewrap"><span class="tick">SAFE ZONE</span><div class="zonering r1"></div><div class="zonering r2"></div><div class="zonering r3"></div><div class="zonecenter"></div></div><div class="float f1"><b>3 MONTHS</b>One complete session</div><div class="float f2"><b>2 TRACKS</b>Headshot/PvP • Esports</div><div class="float f3"><b>GRADUATE</b>Pass the final assessment</div></div>
+  </div>
+  <div class="container trust"><div><b>Structured Training</b><span>Foundation → Development → Mastery</span></div><div><b>Performance Tracking</b><span>Train. Analyze. Improve.</span></div><div><b>Recognition</b><span>Certificates & outstanding graduates</span></div><div><b>VIP Competition</b><span>Graduation tournament access</span></div></div>
+
+  <div class="container section">
+    <div class="eyebrow">Choose your path</div><h2 class="title">Two tracks. One goal: mastery.</h2>
+    <div class="grid2">
+      <article class="card track purple"><div class="trackicon">◉</div><h3>HEADSHOT & PVP</h3><p>Build individual mechanics, precision and confidence in close combat.</p><ul><li>Headshot accuracy</li><li>Aim & reflex</li><li>1v1 / PvP</li><li>Movement & positioning</li><li>Weapon control</li></ul></article>
+      <article class="card track gold"><div class="trackicon">♜</div><h3>ESPORTS</h3><p>Develop the discipline, teamwork and game intelligence needed for competitive play.</p><ul><li>Game sense</li><li>Team strategy</li><li>Communication</li><li>Competitive preparation</li><li>Tournament readiness</li></ul></article>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="page"><div class="container section"><div class="eyebrow">The academy</div><h2 class="title">More than gaming. It's development.</h2><p class="sub">SY Academy was founded by <b>Scott & Yami</b> to create a structured environment where players can train consistently, measure their improvement and earn recognition for exceptional performance.</p><div class="grid3" style="margin-top:28px"><div class="card"><div class="trackicon">01</div><h3>DISCIPLINE</h3><p class="sub">Consistent training and standards.</p></div><div class="card"><div class="trackicon">02</div><h3>PERFORMANCE</h3><p class="sub">Progress is measured, not guessed.</p></div><div class="card"><div class="trackicon">03</div><h3>RECOGNITION</h3><p class="sub">Graduates and outstanding players get recognized.</p></div></div></div></section>
+
+<section id="training" class="page"><div class="container section"><div class="eyebrow">Training</div><h2 class="title">A 3-month progression system.</h2><p class="sub">Every session follows a clear progression instead of random practice.</p><div class="steps" style="margin-top:30px"><div class="step"><i>1</i><b>MONTH 1</b><p class="sub">Foundation — build fundamentals and remove bad habits.</p></div><div class="step"><i>2</i><b>MONTH 2</b><p class="sub">Development — improve speed, consistency and decision making.</p></div><div class="step"><i>3</i><b>MONTH 3</b><p class="sub">Mastery — advanced drills and competitive simulations.</p></div><div class="step"><i>4</i><b>FINAL ASSESSMENT</b><p class="sub">Pass and graduate, or repeat the session and improve.</p></div></div></div></section>
+
+<section id="packages" class="page"><div class="container section"><div class="eyebrow">Packages</div><h2 class="title">Choose your level of support.</h2><div class="grid3" style="margin-top:28px">
+  <article class="card plan"><div class="badge" style="background:#45e58b">BASIC</div><h3>FREE STUDENT</h3><div class="price" id="freePrice">₦0</div><ul><li>3-month program</li><li>Monthly assessments</li><li>Progress evaluation</li><li>Certificate on graduation</li><li>No special care</li><li>No graduation tournament</li></ul><div class="bottom"><button class="ghost" onclick="register()">REGISTER FREE</button></div></article>
+  <article class="card plan vip"><div class="badge">POPULAR</div><h3>VIP STUDENT</h3><div class="price" id="vipPrice">₦X,XXX</div><ul><li>Everything in Free</li><li>Priority training attention</li><li>Detailed performance tracking</li><li>Certificate</li><li>Graduation tournament entitlement</li><li>VIP recognition</li></ul><div class="bottom"><button class="cta" onclick="register()">CHOOSE VIP</button></div></article>
+  <article class="card plan special"><div class="badge p">EXTRA</div><h3>SPECIAL COACHING</h3><div class="price" id="specialPrice">₦X,XXX+</div><small class="sub">Private / extra coaching • available to FREE or VIP students</small><ul style="margin-top:20px"><li>Personal guidance</li><li>Custom training plan</li><li>Extra practice sessions</li><li>Direct coach support</li></ul><div class="bottom"><button class="ghost" onclick="register()">ASK ABOUT COACHING</button></div></article>
+</div><div class="notice" style="margin-top:18px">Package prices are controlled by the academy admin and can be changed without redesigning the website.</div></div></section>
+
+<section id="leaderboard" class="page"><div class="container section"><div class="eyebrow">Recognition</div><h2 class="title">Outstanding Graduates</h2><p class="sub">Only exceptional graduates appear here. The board can be updated by the academy admin.</p><div class="tablewrap" style="margin-top:25px"><table class="table"><thead><tr><th>Rank</th><th>Graduate</th><th>Track</th><th>Session</th><th>Score</th><th>Achievement</th></tr></thead><tbody id="leaderRows"></tbody></table></div></div></section>
+
+<section id="graduates" class="page"><div class="container section"><div class="eyebrow">Hall of achievement</div><h2 class="title">Our Graduates</h2><div class="grid3" id="graduateCards" style="margin-top:25px"></div></div></section>
+
+<section id="academy" class="page"><div class="container section"><div class="eyebrow">How SY works</div><h2 class="title">From enrolment to graduation.</h2><div class="grid2" style="margin-top:28px"><div class="card"><h3>01 • REGISTER</h3><p class="sub">Click Register Now and message the academy through Telegram.</p></div><div class="card"><h3>02 • CHOOSE A TRACK</h3><p class="sub">Select Headshot & PvP or Esports.</p></div><div class="card"><h3>03 • TRAIN FOR 3 MONTHS</h3><p class="sub">Follow the session progression and assessments.</p></div><div class="card"><h3>04 • GRADUATE OR REPEAT</h3><p class="sub">Students who meet the standard graduate. Others repeat and continue developing.</p></div></div></div></section>
+
+<section id="announcements" class="page"><div class="container section"><div class="eyebrow">Academy news</div><h2 class="title">Announcements</h2><div class="grid2" id="announcementCards"></div></div></section>
+
+<section id="contact" class="page"><div class="container section"><div class="eyebrow">Contact</div><h2 class="title">Ready to begin?</h2><p class="sub">Registration is handled through Telegram. No student login is required on the public website.</p><div class="actions"><button class="cta" onclick="register()">MESSAGE SY ACADEMY ON TELEGRAM ↗</button></div></div></section>
+
+<section id="admin" class="page"><div class="container section"><div class="eyebrow">Restricted area</div><h2 class="title">Admin Control Center</h2><p class="sub">Changes made here save to the server and are visible to every visitor.</p><div class="card" style="margin-top:25px"><div class="adminbar"><button onclick="editTotalMembers()">Edit total members joined</button><button onclick="editPrices()">Edit package prices</button><button onclick="addLeader()">Add leaderboard entry</button><button onclick="addAnnouncement()">Add announcement</button><button onclick="adminLogout()">Log out</button></div><div class="stats"><div class="stat"><strong id="s1">500+</strong><span>Students trained</span></div><div class="stat"><strong id="s2">120+</strong><span>Graduates</span></div><div class="stat"><strong id="s3">25+</strong><span>Tournaments</span></div><div class="stat"><strong id="s4">92%</strong><span>Success rate</span></div></div></div></div></section>
+</main>
+
+<footer class="footer"><div class="container footergrid"><div><div class="logo">S<b>Y</b><small>ACADEMY</small></div><p style="margin-top:16px">Building gamers. Building champions.</p></div><div><h4>ACADEMY</h4><a href="#training">Training</a><a href="#packages">Packages</a><a href="#graduates">Graduates</a></div><div><h4>EXPLORE</h4><a href="#leaderboard">Leaderboard</a><a href="#announcements">Announcements</a><a href="#about">About</a></div><div><h4>FOUNDERS</h4><p>Scott & Yami</p><p style="margin-top:8px">© 2026 SY Academy</p></div></div></footer>
+
+<div class="modal" id="loginModal"><div class="modalbox"><h2>Admin Access</h2><p class="sub" style="margin:8px 0 18px">Only authorized academy administrators should use this area.</p><div class="form"><input class="input" id="adminPass" type="password" placeholder="Admin password" onkeydown="if(event.key==='Enter')adminLogin()"><button class="cta" onclick="adminLogin()">LOGIN</button><button class="ghost" onclick="closeModal()">CANCEL</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const TELEGRAM="https://t.me/"; // Replace with SY Academy's real Telegram username/link.
+let data={totalMembers:0,prices:{free:"₦0",vip:"—",special:"—"},leaders:[],graduates:[],announcements:[]};
+let isAdmin=false;
+
+async function api(path,opts){
+ const res=await fetch(path,Object.assign({headers:{"Content-Type":"application/json"}},opts||{}));
+ let body=null;try{body=await res.json()}catch(e){}
+ if(!res.ok)throw new Error((body&&body.error)||"Request failed");
+ return body;
+}
+async function loadData(){
+ try{data=await api("/api/data");render()}
+ catch(e){toast("Couldn't reach the server. Check your connection.")}
+}
+async function checkAdminStatus(){
+ try{const r=await api("/api/admin/status");isAdmin=!!r.loggedIn}catch(e){isAdmin=false}
+ refreshAdminUI();
+}
+function animateCounter(el,target){
+ if(!el)return;
+ target=Math.max(0,parseInt(target,10)||0);
+ clearInterval(el._iv);
+ let cur=0;const step=Math.max(1,Math.round(target/50));
+ el._iv=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(el._iv)}el.textContent=cur.toLocaleString();},20);
+}
+function refreshAdminUI(){
+ const btn=document.getElementById("memberEditBtn");
+ if(btn)btn.style.display=isAdmin?"inline-block":"none";
+}
+function render(){
+ animateCounter(document.getElementById("totalMembersCount"),data.totalMembers);
+ refreshAdminUI();
+ freePrice.textContent=data.prices.free;vipPrice.textContent=data.prices.vip;specialPrice.textContent=data.prices.special;
+ leaderRows.innerHTML=data.leaders.map(x=>`<tr><td class="rank">${x[0]}</td><td><b>${x[1]}</b></td><td>${x[2]}</td><td>${x[3]}</td><td><b>${x[4]}</b></td><td>${x[5]}</td></tr>`).join("");
+ graduateCards.innerHTML=data.graduates.map(x=>`<article class="card"><div class="trackicon">♛</div><h3>${x[0]}</h3><p class="sub">${x[1]} • ${x[2]}</p><div style="margin-top:18px;color:var(--ember);font-weight:800">${x[3]}</div></article>`).join("");
+ announcementCards.innerHTML=data.announcements.map(x=>`<article class="card"><div class="eyebrow">${x[0]}</div><h3 style="margin:10px 0">${x[1]}</h3><p class="sub">Published by SY Academy administration.</p></article>`).join("");
+}
+function route(){
+ let r=location.hash.slice(1)||"home";
+ if(r==="admin" && !isAdmin){document.getElementById("loginModal").classList.add("show");r="home"}
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===r));
+ document.querySelectorAll(".links a").forEach(a=>a.classList.toggle("active",a.dataset.route===r));
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function register(){window.open(TELEGRAM,"_blank")}
+function toggleMenu(){document.querySelector(".links").style.display=document.querySelector(".links").style.display==="flex"?"none":"flex"}
+function closeModal(){document.getElementById("loginModal").classList.remove("show")}
+async function adminLogin(){
+ const pass=document.getElementById("adminPass").value;
+ if(!pass){toast("Enter the admin password.");return}
+ try{
+  await api("/api/admin/login",{method:"POST",body:JSON.stringify({password:pass})});
+  isAdmin=true;closeModal();location.hash="admin";refreshAdminUI();toast("Admin access granted.")
+ }catch(e){toast("Wrong password.")}
+}
+async function adminLogout(){
+ try{await api("/api/admin/logout",{method:"POST"})}catch(e){}
+ isAdmin=false;refreshAdminUI();location.hash="home";toast("Logged out.")
+}
+async function editTotalMembers(){
+ if(!isAdmin){toast("Admin login required.");return}
+ let v=prompt("Total members joined the academy:",data.totalMembers);if(v===null)return;
+ v=parseInt(String(v).replace(/[^0-9]/g,""),10);
+ if(isNaN(v)||v<0){toast("Enter a valid number.");return}
+ try{await api("/api/admin/members",{method:"POST",body:JSON.stringify({value:v})});await loadData();toast("Total members updated.")}
+ catch(e){toast(e.message)}
+}
+async function editPrices(){
+ if(!isAdmin){toast("Admin login required.");return}
+ let v=prompt("VIP price:",data.prices.vip);if(v===null)return;
+ let s=prompt("Special Coaching price:",data.prices.special);if(s===null)return;
+ try{await api("/api/admin/prices",{method:"POST",body:JSON.stringify({vip:v,special:s})});await loadData();toast("Prices updated.")}
+ catch(e){toast(e.message)}
+}
+async function addLeader(){
+ if(!isAdmin){toast("Admin login required.");return}
+ let n=prompt("Graduate/gamer tag:");if(!n)return;
+ let score=prompt("Overall score:","90%");let ach=prompt("Achievement:","Outstanding Performer");
+ try{await api("/api/admin/leaders",{method:"POST",body:JSON.stringify({tag:n,score:score||"90%",achievement:ach||"Outstanding Performer"})});await loadData();toast("Leaderboard updated.")}
+ catch(e){toast(e.message)}
+}
+async function addAnnouncement(){
+ if(!isAdmin){toast("Admin login required.");return}
+ let t=prompt("Announcement title:");if(!t)return;let m=prompt("Announcement text:");if(!m)return;
+ try{await api("/api/admin/announcements",{method:"POST",body:JSON.stringify({title:t,message:m})});await loadData();toast("Announcement posted.")}
+ catch(e){toast(e.message)}
+}
+function toast(x){let t=document.getElementById("toast");t.textContent=x;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+window.addEventListener("hashchange",route);
+(async function init(){await loadData();await checkAdminStatus();route()})();
+
+/* ===== Visual upgrades only (no functional/routing/data logic touched) ===== */
+window.addEventListener("load",()=>{setTimeout(()=>document.getElementById("loader").classList.add("hide"),650)});
+
+(function loaderPct(){
+ const el=document.getElementById("loadpct");if(!el)return;
+ let n=0;const iv=setInterval(()=>{n+=Math.ceil(Math.random()*14)+4;if(n>=100){n=100;clearInterval(iv)}el.textContent=n+"%"},70);
+})();
+
+/* button ripple feedback */
+document.addEventListener("click",e=>{
+ const b=e.target.closest(".cta,.ghost");if(!b)return;
+ const rect=b.getBoundingClientRect();const size=Math.max(rect.width,rect.height);
+ const r=document.createElement("span");r.className="ripple";
+ r.style.width=r.style.height=size+"px";
+ r.style.left=(e.clientX-rect.left-size/2)+"px";r.style.top=(e.clientY-rect.top-size/2)+"px";
+ b.appendChild(r);setTimeout(()=>r.remove(),650);
+});
+
+/* premium cursor ring, desktop only */
+(function cursorRing(){
+ if(matchMedia("(pointer:coarse)").matches)return;
+ const ring=document.createElement("div");ring.className="cursor-ring";document.body.appendChild(ring);
+ addEventListener("mousemove",e=>{ring.style.left=e.clientX+"px";ring.style.top=e.clientY+"px"});
+ document.addEventListener("mouseover",e=>{ring.classList.toggle("active",!!e.target.closest("a,button,.card,.step"))});
+})();
+
+/* gentle scroll-reveal for cards and steps */
+(function reveal(){
+ const targets=document.querySelectorAll(".card, .step, .stat, .trust > div");
+ targets.forEach(el=>el.classList.add("reveal"));
+ const obs=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");obs.unobserve(en.target)}});
+ },{threshold:.15});
+ targets.forEach(el=>obs.observe(el));
+ window.addEventListener("hashchange",()=>setTimeout(()=>{
+  document.querySelectorAll(".page.active .reveal:not(.in)").forEach(el=>obs.observe(el));
+ },50));
+})();
+
+/* countdown to session start — Apr 1 2026, matches the kicker date range */
+(function countdown(){
+ const target=new Date("2026-04-01T00:00:00");
+ const d=document.getElementById("cdD"),h=document.getElementById("cdH"),m=document.getElementById("cdM"),s=document.getElementById("cdS");
+ if(!d)return;
+ function tick(){
+  let diff=target-new Date();
+  if(diff<0)diff=0;
+  const days=Math.floor(diff/86400000),hrs=Math.floor(diff%86400000/3600000),mins=Math.floor(diff%3600000/60000),secs=Math.floor(diff%60000/1000);
+  d.textContent=String(days).padStart(2,"0");h.textContent=String(hrs).padStart(2,"0");
+  m.textContent=String(mins).padStart(2,"0");s.textContent=String(secs).padStart(2,"0");
+ }
+ tick();setInterval(tick,1000);
+})();
+
+/* hero-art tilt parallax, desktop only */
+(function heroTilt(){
+ const art=document.querySelector(".hero-art");if(!art||matchMedia("(pointer:coarse)").matches)return;
+ art.addEventListener("mousemove",e=>{
+  const r=art.getBoundingClientRect();
+  const rx=((e.clientY-r.top)/r.height-.5)*-6;
+  const ry=((e.clientX-r.left)/r.width-.5)*6;
+  art.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+ });
+ art.addEventListener("mouseleave",()=>{art.style.transform="perspective(900px) rotateX(0) rotateY(0)"});
+})();
+
+(function embers(){
+ const canvas=document.getElementById("embers");if(!canvas)return;
+ const ctx=canvas.getContext("2d");
+ const reduce=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ let w,h,particles=[];
+ function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight}
+ resize();addEventListener("resize",resize);
+ function make(){return{x:Math.random()*w,y:h+20+Math.random()*100,r:1+Math.random()*2.2,s:.4+Math.random()*1.1,drift:(Math.random()-.5)*.6,life:0,max:200+Math.random()*200,hue:Math.random()>.5?"255,90,31":"255,196,0"}}
+ for(let i=0;i<(reduce?0:55);i++){let p=make();p.y=Math.random()*h;particles.push(p)}
+ function tick(){
+  if(!reduce){
+   ctx.clearRect(0,0,w,h);
+   particles.forEach(p=>{
+    p.y-=p.s;p.x+=p.drift;p.life++;
+    let fade=1-p.life/p.max;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);
+    ctx.fillStyle=`rgba(${p.hue},${Math.max(fade,0)*.55})`;ctx.fill();
+    if(p.life>p.max||p.y<-20){Object.assign(p,make())}
+   });
+  }
+  requestAnimationFrame(tick);
+ }
+ tick();
+})();
+
+(function counters(){
+ document.querySelectorAll(".trust b, .stat strong").forEach(el=>{
+  const raw=el.textContent.trim();const m=raw.match(/^(\d+)(.*)$/);
+  if(!m)return;
+  const target=parseInt(m[1],10);const suffix=m[2]||"";
+  let obs=new IntersectionObserver(entries=>{
+   entries.forEach(e=>{
+    if(e.isIntersecting){
+     let cur=0;const step=Math.max(1,Math.round(target/40));
+     const iv=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(iv)}el.textContent=cur+suffix},20);
+     obs.disconnect();
+    }
+   });
+  },{threshold:.4});
+  obs.observe(el);
+ });
+})();
+
+document.querySelectorAll(".card, .step").forEach(el=>{
+ el.addEventListener("mousemove",e=>{
+  const r=el.getBoundingClientRect();
+  const rx=((e.clientY-r.top)/r.height-.5)*-4;
+  const ry=((e.clientX-r.left)/r.width-.5)*4;
+  el.style.transform=`translateY(-4px) perspective(600px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+ });
+ el.addEventListener("mouseleave",()=>{el.style.transform=""});
+});
+
+/* =========================================================
+   SY ACADEMY // PEAK INTERACTION LAYER
+   ========================================================= */
+(function peakLayer(){
+  const body=document.body;
+
+  // Scroll progress + compact nav.
+  const progress=document.createElement("div");
+  progress.id="peakProgress";
+  body.appendChild(progress);
+  const nav=document.querySelector(".nav");
+  function peakScroll(){
+    const max=document.documentElement.scrollHeight-innerHeight;
+    progress.style.width=(max>0?(scrollY/max)*100:0)+"%";
+    nav && nav.classList.toggle("scrolled",scrollY>18);
+  }
+  addEventListener("scroll",peakScroll,{passive:true}); peakScroll();
+
+  // Moving academy ticker.
+  const ticker=document.createElement("div");
+  ticker.className="peak-ticker";
+  ticker.innerHTML=`<div class="peak-ticker-track">
+    <span class="peak-live"><i></i>ACADEMY SYSTEM ONLINE</span>
+    <span><b>SY ACADEMY</b> // TRAIN • IMPROVE • DOMINATE</span>
+    <span>SESSION 06 // APR — JUN 2026</span>
+    <span>HEADSHOT & PVP // ESPORTS</span>
+    <span>3-MONTH DEVELOPMENT CYCLE</span>
+    <span>VIP GRADUATION TOURNAMENT</span>
+    <span>OUTSTANDING GRADUATES // RECOGNITION</span>
+    <span class="peak-live"><i></i>ACADEMY SYSTEM ONLINE</span>
+    <span><b>SY ACADEMY</b> // TRAIN • IMPROVE • DOMINATE</span>
+    <span>SESSION 06 // APR — JUN 2026</span>
+    <span>HEADSHOT & PVP // ESPORTS</span>
+    <span>3-MONTH DEVELOPMENT CYCLE</span>
+    <span>VIP GRADUATION TOURNAMENT</span>
+  </div>`;
+  const header=document.querySelector(".nav");
+  header.parentNode.insertBefore(ticker,header);
+
+  // Mobile navigation without changing the existing route system.
+  const mobile=document.createElement("div");
+  mobile.className="peak-mobile-menu";
+  mobile.innerHTML=`
+    <a href="#home">HOME</a><a href="#about">ABOUT</a><a href="#training">TRAINING</a>
+    <a href="#packages">PACKAGES</a><a href="#leaderboard">LEADERBOARD</a>
+    <a href="#graduates">GRADUATES</a><a href="#academy">ACADEMY</a>
+    <a href="#announcements">ANNOUNCEMENTS</a><a href="#contact">CONTACT</a>
+    <button class="cta" onclick="register()">REGISTER NOW ↗</button>`;
+  document.querySelector(".navin").appendChild(mobile);
+  const oldMenu=document.querySelector(".menu");
+  if(oldMenu) oldMenu.onclick=()=>mobile.classList.toggle("show");
+  mobile.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>mobile.classList.remove("show")));
+
+  // Add a tactical HUD to the existing hero art.
+  const art=document.querySelector(".hero-art");
+  if(art && !art.querySelector(".peak-hud")){
+    const hud=document.createElement("div");
+    hud.className="peak-hud";
+    hud.innerHTML=`<div class="peak-hud-label">SY // TACTICAL INTERFACE</div>
+      <div class="peak-hud-status"><b>● LIVE</b> // SESSION FEED</div>
+      <div class="peak-radar"><span></span></div>`;
+    art.appendChild(hud);
+  }
+
+  // Add chips beneath the hero CTA.
+  const actions=document.querySelector("#home .actions");
+  if(actions && !document.querySelector(".peak-chip-row")){
+    const chips=document.createElement("div");
+    chips.className="peak-chip-row";
+    chips.innerHTML=`<span class="peak-chip orange"><b>3</b>&nbsp; MONTHS</span>
+      <span class="peak-chip cyan"><b>2</b>&nbsp; TRAINING TRACKS</span>
+      <span class="peak-chip violet"><b>VIP</b>&nbsp; TOURNAMENT</span>`;
+    actions.parentNode.insertBefore(chips,actions.nextSibling);
+  }
+
+  // Add a richer session intelligence card to the Training page.
+  const training=document.querySelector("#training .container.section");
+  if(training && !training.querySelector(".peak-session-card")){
+    const box=document.createElement("div");
+    box.className="peak-session-card";
+    box.innerHTML=`
+      <div class="peak-session-main">
+        <span class="peak-badge"><i></i> CURRENT SESSION</span>
+        <h3 style="font:900 27px var(--font-display);margin-top:13px">SESSION 06 // DEVELOPMENT CYCLE</h3>
+        <p class="sub" style="margin-top:9px">A controlled three-month progression designed to turn repetition into measurable improvement.</p>
+        <div class="peak-progress"><i></i></div>
+        <div class="peak-progress-meta"><span>MONTH 1 // FOUNDATION</span><b style="color:#fff">33%</b></div>
+        <div class="peak-mini-grid">
+          <div class="peak-mini"><strong>01</strong><span>FOUNDATION</span></div>
+          <div class="peak-mini"><strong>02</strong><span>DEVELOPMENT</span></div>
+          <div class="peak-mini"><strong>03</strong><span>MASTERY</span></div>
+        </div>
+        <div class="peak-quote">“The objective isn't to make every player the same. It's to build every player's highest level.”</div>
+      </div>
+      <div class="peak-session-side">
+        <span class="eyebrow">Session intelligence</span>
+        <div class="peak-status-grid">
+          <div class="peak-status-box"><small>Cycle</small><b>3 Months</b></div>
+          <div class="peak-status-box"><small>Assessment</small><b>Monthly</b></div>
+          <div class="peak-status-box"><small>Outcome</small><b>Graduate / Repeat</b></div>
+          <div class="peak-status-box"><small>Tracks</small><b>2 Available</b></div>
+        </div>
+        <div style="margin-top:20px;padding:15px;border:1px solid rgba(55,242,255,.12);border-radius:13px;background:rgba(55,242,255,.025)">
+          <div style="font-size:9px;color:var(--peak-cyan);letter-spacing:2px">ACADEMY STANDARD</div>
+          <div style="font-size:12px;color:#c6ced9;line-height:1.6;margin-top:6px">Players are evaluated on skill, consistency, intelligence, discipline and development.</div>
+        </div>
+      </div>`;
+    training.appendChild(box);
+  }
+
+  // Add premium visual details to every existing card without changing its content.
+  document.querySelectorAll(".card").forEach(card=>{
+    if(!card.querySelector(".peak-corner")){
+      const c=document.createElement("span");c.className="peak-corner";card.appendChild(c);
+    }
+    card.addEventListener("mousemove",e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5;
+      const y=(e.clientY-r.top)/r.height-.5;
+      card.style.setProperty("--mx",(x*100)+"%");
+      card.style.setProperty("--my",(y*100)+"%");
+    });
+  });
+
+  // Premium package divider.
+  document.querySelectorAll(".plan").forEach(plan=>{
+    if(!plan.querySelector(".peak-plan-line")){
+      const line=document.createElement("div");line.className="peak-plan-line";
+      const title=plan.querySelector("h3"); if(title) title.after(line);
+    }
+  });
+
+  // Command palette: press "/" or Ctrl+K.
+  const commands=[
+    ["HOME","Go to the main academy page","home"],
+    ["TRAINING","View the 3-month progression","training"],
+    ["PACKAGES","Compare Free, VIP and Special Coaching","packages"],
+    ["LEADERBOARD","View outstanding graduates","leaderboard"],
+    ["GRADUATES","Open the hall of achievement","graduates"],
+    ["ACADEMY","See how the academy works","academy"],
+    ["ANNOUNCEMENTS","Read academy updates","announcements"],
+    ["CONTACT","Contact SY Academy","contact"]
+  ];
+  const cmd=document.createElement("div");
+  cmd.className="peak-command";
+  cmd.innerHTML=`<div class="peak-command-box">
+    <div class="peak-command-head"><input class="peak-command-input" placeholder="Search SY Academy..." autocomplete="off"></div>
+    <div class="peak-command-list"></div>
+    <div class="peak-command-help">ENTER TO OPEN • ESC TO CLOSE • CTRL/⌘ + K</div>
+  </div>`;
+  body.appendChild(cmd);
+  const input=cmd.querySelector(".peak-command-input"),list=cmd.querySelector(".peak-command-list");
+  let selected=0;
+  function drawCommands(q=""){
+    const filtered=commands.filter(x=>(x[0]+" "+x[1]).toLowerCase().includes(q.toLowerCase()));
+    selected=Math.min(selected,Math.max(0,filtered.length-1));
+    list.innerHTML=filtered.map((x,i)=>`<div class="peak-command-item ${i===selected?"sel":""}" data-route="${x[2]}"><span><b>${x[0]}</b><small style="display:block;color:#687382;margin-top:3px">${x[1]}</small></span><kbd>↵</kbd></div>`).join("");
+    list.querySelectorAll(".peak-command-item").forEach((el,i)=>el.onclick=()=>{location.hash=el.dataset.route;cmd.classList.remove("show")});
+  }
+  function openCmd(){cmd.classList.add("show");input.value="";selected=0;drawCommands();setTimeout(()=>input.focus(),20)}
+  function closeCmd(){cmd.classList.remove("show")}
+  input.addEventListener("input",()=>drawCommands(input.value));
+  document.addEventListener("keydown",e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openCmd()}
+    else if(e.key==="/" && !["INPUT","TEXTAREA"].includes(document.activeElement.tagName)){e.preventDefault();openCmd()}
+    else if(e.key==="Escape")closeCmd();
+    else if(cmd.classList.contains("show") && e.key==="ArrowDown"){e.preventDefault();selected++;drawCommands(input.value)}
+    else if(cmd.classList.contains("show") && e.key==="ArrowUp"){e.preventDefault();selected=Math.max(0,selected-1);drawCommands(input.value)}
+    else if(cmd.classList.contains("show") && e.key==="Enter"){e.preventDefault();list.querySelector(".sel")?.click()}
+  });
+  cmd.addEventListener("click",e=>{if(e.target===cmd)closeCmd()});
+
+  // Small premium status in the footer.
+  const footer=document.querySelector(".footer");
+  if(footer && !footer.querySelector(".peak-footer-status")){
+    const s=document.createElement("div");
+    s.className="peak-footer-status";
+    s.style.cssText="margin-top:24px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:9px;letter-spacing:1.5px;color:#566170;text-transform:uppercase";
+    s.innerHTML=`<span>SY ACADEMY // SYSTEM STATUS <b style="color:#45e58b">● ONLINE</b></span><span>FOUNDED BY SCOTT & YAMI</span><span>TRAIN • IMPROVE • DOMINATE</span>`;
+    footer.querySelector(".container")?.appendChild(s);
+  }
+
+  // Make page changes feel like a real app.
+  let lastHash=location.hash;
+  addEventListener("hashchange",()=>{
+    if(location.hash!==lastHash){
+      lastHash=location.hash;
+      const active=document.querySelector(".page.active");
+      if(active){active.style.animation="none";void active.offsetWidth;active.style.animation="in .45s cubic-bezier(.2,.8,.2,1)";}
+      mobile.classList.remove("show");
+    }
+  });
+})();
+
+
+/* SY ACADEMY ELITE COMMAND JS */
+(function(){const home=document.querySelector("#home .container.section");if(!home||document.querySelector(".elite-recruit"))return;const w=document.createElement("div");w.className="elite-recruit";w.innerHTML=`<div class="elite-head"><div><small>SY ACADEMY // RECRUITMENT TERMINAL</small><h3>ACTIVE ACADEMY NETWORK</h3></div><div class="elite-live"><i></i>LIVE SYSTEM</div></div><div class="elite-numbers"><div class="elite-number"><strong data-count="1284">0</strong><span>Recruits Enrolled</span></div><div class="elite-number"><strong data-count="37">0</strong><span>Joined This Week</span></div><div class="elite-number"><strong data-count="18">0</strong><span>VIP Students</span></div><div class="elite-number"><strong data-count="7">0</strong><span>Esports Track</span></div></div><div class="elite-progress"><i></i></div><div class="elite-terminal"><div><b>SYS</b> :: recruitment database synchronized...</div><div><b>TRACKS</b> :: HEADSHOT/PVP <em>+</em> ESPORTS</div><div><b>SESSION</b> :: 06 / DEVELOPMENT CYCLE / STATUS <em>ACTIVE</em></div><div><b>ACCESS</b> :: PUBLIC ENROLMENT / ADMIN CONTROLLED</div></div>`;home.appendChild(w);w.querySelectorAll("[data-count]").forEach(e=>{let n=+e.dataset.count,s=performance.now();function f(t){let p=Math.min(1,(t-s)/1300),q=1-Math.pow(1-p,3);e.textContent=Math.floor(n*q).toLocaleString();if(p<1)requestAnimationFrame(f)}requestAnimationFrame(f)});const founder=document.createElement("div");founder.className="elite-founder";founder.innerHTML=`<div><span>FOUNDERS</span><br><b>Scott & Yami</b></div><div class="elite-founder-mark">SY</div><div class="elite-verify"><i></i> VERIFIED ACADEMY</div>`;home.appendChild(founder);const g=document.querySelector("#graduates .container.section");if(g&&!g.querySelector(".elite-hall")){const l=document.createElement("div");l.style.marginTop="58px";l.innerHTML=`<div class="eyebrow">Elite recognition</div><h2 class="title">Hall of Legends</h2><p class="sub">A permanent home for the players who set the academy standard.</p>`;g.appendChild(l);const h=document.createElement("div");h.className="elite-hall";h.innerHTML=`<article class="elite-hall-card"><div class="elite-medal">01</div><h3>THE STANDARD</h3><p>The academy's defining performer.</p><b>ELITE GRADUATE</b></article><article class="elite-hall-card"><div class="elite-medal">02</div><h3>THE CLUTCH</h3><p>Exceptional competitive composure.</p><b>COMPETITIVE EXCELLENCE</b></article><article class="elite-hall-card"><div class="elite-medal">03</div><h3>THE PRECISION</h3><p>Outstanding mechanics and accuracy.</p><b>MECHANICAL MASTERY</b></article>`;g.appendChild(h)}})();
+</script>
+</body>
+</html>

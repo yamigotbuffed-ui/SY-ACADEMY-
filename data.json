@@ -1,0 +1,102 @@
+{
+  "totalMembers": 1,
+  "prices": {
+    "free": "₦0",
+    "vip": "₦X,XXX",
+    "special": "₦X,XXX+"
+  },
+  "leaders": [
+    [
+      "1",
+      "SY-PHOENIX",
+      "Esports",
+      "Session 04",
+      "97.6%",
+      "Top Performer"
+    ],
+    [
+      "2",
+      "SY-SHADOW",
+      "Headshot & PvP",
+      "Session 05",
+      "96.1%",
+      "Headshot King"
+    ],
+    [
+      "3",
+      "SY-GHOST",
+      "Esports",
+      "Session 04",
+      "94.8%",
+      "Most Intelligent"
+    ],
+    [
+      "4",
+      "SY-RAVEN",
+      "Headshot & PvP",
+      "Session 05",
+      "93.2%",
+      "Most Improved"
+    ],
+    [
+      "5",
+      "SY-FLASH",
+      "Esports",
+      "Session 03",
+      "92.7%",
+      "Best Team Player"
+    ]
+  ],
+  "graduates": [
+    [
+      "SY-PHOENIX",
+      "Esports",
+      "Session 04",
+      "Top Performer"
+    ],
+    [
+      "SY-SHADOW",
+      "Headshot & PvP",
+      "Session 05",
+      "Headshot King"
+    ],
+    [
+      "SY-GHOST",
+      "Esports",
+      "Session 04",
+      "Most Intelligent"
+    ],
+    [
+      "SY-RAVEN",
+      "Headshot & PvP",
+      "Session 05",
+      "Most Improved"
+    ],
+    [
+      "SY-FLASH",
+      "Esports",
+      "Session 03",
+      "Best Team Player"
+    ],
+    [
+      "SY-NOVA",
+      "Headshot & PvP",
+      "Session 02",
+      "Precision Award"
+    ]
+  ],
+  "announcements": [
+    [
+      "SESSION 06",
+      "New session registration is now open."
+    ],
+    [
+      "VIP GRADUATION",
+      "VIP graduates receive graduation tournament access."
+    ],
+    [
+      "ACADEMY",
+      "Monthly assessments are part of every session."
+    ]
+  ]
+}
