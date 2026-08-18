@@ -533,11 +533,11 @@ body:after{
   </div>
   <div class="container trust"><div><b>Structured Training</b><span>Foundation → Development → Mastery</span></div><div><b>Performance Tracking</b><span>Train. Analyze. Improve.</span></div><div><b>Recognition</b><span>Certificates & outstanding graduates</span></div><div><b>VIP Competition</b><span>Graduation tournament access</span></div></div>
 
-  <div class="container section">
+  <div class="container section" id="tracks">
     <div class="eyebrow">Choose your path</div><h2 class="title">Two tracks. One goal: mastery.</h2>
     <div class="grid2">
-      <article class="card track purple"><div class="trackicon">◉</div><h3>HEADSHOT & PVP</h3><p>Build individual mechanics, precision and confidence in close combat.</p><ul><li>Headshot accuracy</li><li>Aim & reflex</li><li>1v1 / PvP</li><li>Movement & positioning</li><li>Weapon control</li></ul></article>
-      <article class="card track gold"><div class="trackicon">♜</div><h3>ESPORTS</h3><p>Develop the discipline, teamwork and game intelligence needed for competitive play.</p><ul><li>Game sense</li><li>Team strategy</li><li>Communication</li><li>Competitive preparation</li><li>Tournament readiness</li></ul></article>
+      <article class="card track purple"><div class="trackicon">◉</div><h3>HEADSHOT & PVP</h3><p>Build individual mechanics, precision and confidence in close combat.</p><ul><li>Headshot accuracy</li><li>Aim & reflex</li><li>1v1 / PvP</li><li>Movement & positioning</li><li>Weapon control</li></ul><button class="cta" style="margin-top:18px" onclick="registerHeadshot()">MESSAGE HEADSHOT COACH ↗</button></article>
+      <article class="card track gold"><div class="trackicon">♜</div><h3>ESPORTS</h3><p>Develop the discipline, teamwork and game intelligence needed for competitive play.</p><ul><li>Game sense</li><li>Team strategy</li><li>Communication</li><li>Competitive preparation</li><li>Tournament readiness</li></ul><button class="cta" style="margin-top:18px" onclick="registerEsports()">MESSAGE ESPORTS COACH ↗</button></article>
     </div>
   </div>
 </section>
@@ -560,9 +560,9 @@ body:after{
 
 <section id="announcements" class="page"><div class="container section"><div class="eyebrow">Academy news</div><h2 class="title">Announcements</h2><div class="grid2" id="announcementCards"></div></div></section>
 
-<section id="contact" class="page"><div class="container section"><div class="eyebrow">Contact</div><h2 class="title">Ready to begin?</h2><p class="sub">Registration is handled through Telegram. No student login is required on the public website.</p><div class="actions"><button class="cta" onclick="register()">MESSAGE SY ACADEMY ON TELEGRAM ↗</button></div></div></section>
+<section id="contact" class="page"><div class="container section"><div class="eyebrow">Contact</div><h2 class="title">Ready to begin?</h2><p class="sub">Registration is handled through Telegram, by track. No student login is required on the public website.</p><div class="actions" style="flex-wrap:wrap;gap:12px"><button class="cta" onclick="registerEsports()">MESSAGE ESPORTS COACH ↗</button><button class="ghost" onclick="registerHeadshot()">MESSAGE HEADSHOT & PVP COACH ↗</button></div></div></section>
 
-<section id="admin" class="page"><div class="container section"><div class="eyebrow">Restricted area</div><h2 class="title">Admin Control Center</h2><p class="sub">Changes made here save to the server and are visible to every visitor.</p><div class="card" style="margin-top:25px"><div class="adminbar"><button onclick="editTotalMembers()">Edit total members joined</button><button onclick="editPrices()">Edit package prices</button><button onclick="addLeader()">Add leaderboard entry</button><button onclick="addAnnouncement()">Add announcement</button><button onclick="adminLogout()">Log out</button></div><div class="stats"><div class="stat"><strong id="s1">500+</strong><span>Students trained</span></div><div class="stat"><strong id="s2">120+</strong><span>Graduates</span></div><div class="stat"><strong id="s3">25+</strong><span>Tournaments</span></div><div class="stat"><strong id="s4">92%</strong><span>Success rate</span></div></div></div></div></section>
+<section id="admin" class="page"><div class="container section"><div class="eyebrow">Restricted area</div><h2 class="title">Admin Control Center</h2><p class="sub">Changes made here save to the server and are visible to every visitor.</p><div class="card" style="margin-top:25px"><div class="adminbar"><button onclick="editTotalMembers()">Edit total members joined</button><button onclick="editNetwork()">Edit network stats</button><button onclick="editPrices()">Edit package prices</button><button onclick="addLeader()">Add leaderboard entry</button><button onclick="addAnnouncement()">Add announcement</button><button onclick="adminLogout()">Log out</button></div><div class="stats"><div class="stat"><strong id="s1">500+</strong><span>Students trained</span></div><div class="stat"><strong id="s2">120+</strong><span>Graduates</span></div><div class="stat"><strong id="s3">25+</strong><span>Tournaments</span></div><div class="stat"><strong id="s4">92%</strong><span>Success rate</span></div></div></div></div></section>
 </main>
 
 <footer class="footer"><div class="container footergrid"><div><div class="logo">S<b>Y</b><small>ACADEMY</small></div><p style="margin-top:16px">Building gamers. Building champions.</p></div><div><h4>ACADEMY</h4><a href="#training">Training</a><a href="#packages">Packages</a><a href="#graduates">Graduates</a></div><div><h4>EXPLORE</h4><a href="#leaderboard">Leaderboard</a><a href="#announcements">Announcements</a><a href="#about">About</a></div><div><h4>FOUNDERS</h4><p>Scott & Yami</p><p style="margin-top:8px">© 2026 SY Academy</p></div></div></footer>
@@ -571,9 +571,11 @@ body:after{
 <div class="toast" id="toast"></div>
 
 <script>
-const TELEGRAM="https://t.me/SY_ACADEMY";
-let data={totalMembers:0,prices:{free:"₦0",vip:"—",special:"—"},leaders:[],graduates:[],announcements:[]};
+const TELEGRAM_ESPORTS="https://t.me/SY_ACADEMY"; // Esports track contact (Yami)
+const TELEGRAM_HEADSHOT="https://t.me/"; // Headshot & PvP track contact (Scott) — replace with real link when ready
+let data={totalMembers:0,network:{recruits:0,joinedThisWeek:0,vipStudents:0,esportsTrack:0},prices:{free:"₦0",vip:"—",special:"—"},leaders:[],graduates:[],announcements:[]};
 let isAdmin=false;
+window.data=data;window.isAdmin=isAdmin;
 
 async function api(path,opts){
  const res=await fetch(path,Object.assign({headers:{"Content-Type":"application/json"}},opts||{}));
@@ -582,11 +584,12 @@ async function api(path,opts){
  return body;
 }
 async function loadData(){
- try{data=await api("/api/data");render()}
+ try{data=await api("/api/data");window.data=data;render()}
  catch(e){toast("Couldn't reach the server. Check your connection.")}
 }
 async function checkAdminStatus(){
  try{const r=await api("/api/admin/status");isAdmin=!!r.loggedIn}catch(e){isAdmin=false}
+ window.isAdmin=isAdmin;
  refreshAdminUI();
 }
 function animateCounter(el,target){
@@ -599,10 +602,13 @@ function animateCounter(el,target){
 function refreshAdminUI(){
  const btn=document.getElementById("memberEditBtn");
  if(btn)btn.style.display=isAdmin?"inline-block":"none";
+ const netBtn=document.getElementById("networkEditBtn");
+ if(netBtn)netBtn.style.display=isAdmin?"inline-block":"none";
 }
 function render(){
  animateCounter(document.getElementById("totalMembersCount"),data.totalMembers);
  refreshAdminUI();
+ if(window.renderNetworkStats)window.renderNetworkStats();
  freePrice.textContent=data.prices.free;vipPrice.textContent=data.prices.vip;specialPrice.textContent=data.prices.special;
  leaderRows.innerHTML=data.leaders.map(x=>`<tr><td class="rank">${x[0]}</td><td><b>${x[1]}</b></td><td>${x[2]}</td><td>${x[3]}</td><td><b>${x[4]}</b></td><td>${x[5]}</td></tr>`).join("");
  graduateCards.innerHTML=data.graduates.map(x=>`<article class="card"><div class="trackicon">♛</div><h3>${x[0]}</h3><p class="sub">${x[1]} • ${x[2]}</p><div style="margin-top:18px;color:var(--ember);font-weight:800">${x[3]}</div></article>`).join("");
@@ -615,7 +621,16 @@ function route(){
  document.querySelectorAll(".links a").forEach(a=>a.classList.toggle("active",a.dataset.route===r));
  window.scrollTo({top:0,behavior:"smooth"});
 }
-function register(){window.open(TELEGRAM,"_blank")}
+function register(){scrollToTracks()}
+function scrollToTracks(){
+ if((location.hash.slice(1)||"home")!=="home")location.hash="home";
+ setTimeout(()=>{document.getElementById("tracks")?.scrollIntoView({behavior:"smooth"})},60);
+}
+function registerEsports(){window.open(TELEGRAM_ESPORTS,"_blank")}
+function registerHeadshot(){
+ if(!TELEGRAM_HEADSHOT || TELEGRAM_HEADSHOT==="https://t.me/"){toast("Headshot & PvP contact coming soon.");return}
+ window.open(TELEGRAM_HEADSHOT,"_blank")
+}
 function toggleMenu(){document.querySelector(".links").style.display=document.querySelector(".links").style.display==="flex"?"none":"flex"}
 function closeModal(){document.getElementById("loginModal").classList.remove("show")}
 async function adminLogin(){
@@ -623,12 +638,12 @@ async function adminLogin(){
  if(!pass){toast("Enter the admin password.");return}
  try{
   await api("/api/admin/login",{method:"POST",body:JSON.stringify({password:pass})});
-  isAdmin=true;closeModal();location.hash="admin";refreshAdminUI();toast("Admin access granted.")
+  isAdmin=true;window.isAdmin=true;closeModal();location.hash="admin";refreshAdminUI();toast("Admin access granted.")
  }catch(e){toast("Wrong password.")}
 }
 async function adminLogout(){
  try{await api("/api/admin/logout",{method:"POST"})}catch(e){}
- isAdmin=false;refreshAdminUI();location.hash="home";toast("Logged out.")
+ isAdmin=false;window.isAdmin=false;refreshAdminUI();location.hash="home";toast("Logged out.")
 }
 async function editTotalMembers(){
  if(!isAdmin){toast("Admin login required.");return}
@@ -637,6 +652,20 @@ async function editTotalMembers(){
  if(isNaN(v)||v<0){toast("Enter a valid number.");return}
  try{await api("/api/admin/members",{method:"POST",body:JSON.stringify({value:v})});await loadData();toast("Total members updated.")}
  catch(e){toast(e.message)}
+}
+async function editNetwork(){
+ if(!isAdmin){toast("Admin login required.");return}
+ const n=data.network||{recruits:0,joinedThisWeek:0,vipStudents:0,esportsTrack:0};
+ let recruits=prompt("Recruits Enrolled:",n.recruits);if(recruits===null)return;
+ let week=prompt("Joined This Week:",n.joinedThisWeek);if(week===null)return;
+ let vip=prompt("VIP Students:",n.vipStudents);if(vip===null)return;
+ let esports=prompt("Esports Track:",n.esportsTrack);if(esports===null)return;
+ const vals=[recruits,week,vip,esports].map(x=>parseInt(String(x).replace(/[^0-9]/g,""),10));
+ if(vals.some(v=>isNaN(v)||v<0)){toast("Enter valid numbers.");return}
+ try{
+  await api("/api/admin/network",{method:"POST",body:JSON.stringify({recruits:vals[0],joinedThisWeek:vals[1],vipStudents:vals[2],esportsTrack:vals[3]})});
+  await loadData();toast("Network stats updated.")
+ }catch(e){toast(e.message)}
 }
 async function editPrices(){
  if(!isAdmin){toast("Admin login required.");return}
@@ -977,7 +1006,20 @@ document.querySelectorAll(".card, .step").forEach(el=>{
 
 
 /* SY ACADEMY ELITE COMMAND JS */
-(function(){const home=document.querySelector("#home .container.section");if(!home||document.querySelector(".elite-recruit"))return;const w=document.createElement("div");w.className="elite-recruit";w.innerHTML=`<div class="elite-head"><div><small>SY ACADEMY // RECRUITMENT TERMINAL</small><h3>ACTIVE ACADEMY NETWORK</h3></div><div class="elite-live"><i></i>LIVE SYSTEM</div></div><div class="elite-numbers"><div class="elite-number"><strong data-count="1284">0</strong><span>Recruits Enrolled</span></div><div class="elite-number"><strong data-count="37">0</strong><span>Joined This Week</span></div><div class="elite-number"><strong data-count="18">0</strong><span>VIP Students</span></div><div class="elite-number"><strong data-count="7">0</strong><span>Esports Track</span></div></div><div class="elite-progress"><i></i></div><div class="elite-terminal"><div><b>SYS</b> :: recruitment database synchronized...</div><div><b>TRACKS</b> :: HEADSHOT/PVP <em>+</em> ESPORTS</div><div><b>SESSION</b> :: 06 / DEVELOPMENT CYCLE / STATUS <em>ACTIVE</em></div><div><b>ACCESS</b> :: PUBLIC ENROLMENT / ADMIN CONTROLLED</div></div>`;home.appendChild(w);w.querySelectorAll("[data-count]").forEach(e=>{let n=+e.dataset.count,s=performance.now();function f(t){let p=Math.min(1,(t-s)/1300),q=1-Math.pow(1-p,3);e.textContent=Math.floor(n*q).toLocaleString();if(p<1)requestAnimationFrame(f)}requestAnimationFrame(f)});const founder=document.createElement("div");founder.className="elite-founder";founder.innerHTML=`<div><span>FOUNDERS</span><br><b>Scott & Yami</b></div><div class="elite-founder-mark">SY</div><div class="elite-verify"><i></i> VERIFIED ACADEMY</div>`;home.appendChild(founder);const g=document.querySelector("#graduates .container.section");if(g&&!g.querySelector(".elite-hall")){const l=document.createElement("div");l.style.marginTop="58px";l.innerHTML=`<div class="eyebrow">Elite recognition</div><h2 class="title">Hall of Legends</h2><p class="sub">A permanent home for the players who set the academy standard.</p>`;g.appendChild(l);const h=document.createElement("div");h.className="elite-hall";h.innerHTML=`<article class="elite-hall-card"><div class="elite-medal">01</div><h3>THE STANDARD</h3><p>The academy's defining performer.</p><b>ELITE GRADUATE</b></article><article class="elite-hall-card"><div class="elite-medal">02</div><h3>THE CLUTCH</h3><p>Exceptional competitive composure.</p><b>COMPETITIVE EXCELLENCE</b></article><article class="elite-hall-card"><div class="elite-medal">03</div><h3>THE PRECISION</h3><p>Outstanding mechanics and accuracy.</p><b>MECHANICAL MASTERY</b></article>`;g.appendChild(h)}})();
+(function(){const home=document.querySelector("#home .container.section");if(!home||document.querySelector(".elite-recruit"))return;const w=document.createElement("div");w.className="elite-recruit";w.innerHTML=`<div class="elite-head"><div><small>SY ACADEMY // RECRUITMENT TERMINAL</small><h3>ACTIVE ACADEMY NETWORK</h3></div><div class="elite-live"><i></i>LIVE SYSTEM</div></div><div class="elite-numbers"><div class="elite-number"><strong id="netRecruits" data-count="0">0</strong><span>Recruits Enrolled</span></div><div class="elite-number"><strong id="netJoinedWeek" data-count="0">0</strong><span>Joined This Week</span></div><div class="elite-number"><strong id="netVip" data-count="0">0</strong><span>VIP Students</span></div><div class="elite-number"><strong id="netEsports" data-count="0">0</strong><span>Esports Track</span></div></div><div class="elite-progress"><i></i></div><div class="elite-terminal"><div><b>SYS</b> :: recruitment database synchronized...</div><div><b>TRACKS</b> :: HEADSHOT/PVP <em>+</em> ESPORTS</div><div><b>SESSION</b> :: 06 / DEVELOPMENT CYCLE / STATUS <em>ACTIVE</em></div><div><b>ACCESS</b> :: PUBLIC ENROLMENT / ADMIN CONTROLLED</div></div><button class="memberedit elite-edit" id="networkEditBtn" style="display:none;margin-top:14px" onclick="editNetwork()">Edit these numbers</button>`;home.appendChild(w);const founder=document.createElement("div");founder.className="elite-founder";founder.innerHTML=`<div><span>FOUNDERS</span><br><b>Scott & Yami</b></div><div class="elite-founder-mark">SY</div><div class="elite-verify"><i></i> VERIFIED ACADEMY</div>`;home.appendChild(founder);const g=document.querySelector("#graduates .container.section");if(g&&!g.querySelector(".elite-hall")){const l=document.createElement("div");l.style.marginTop="58px";l.innerHTML=`<div class="eyebrow">Elite recognition</div><h2 class="title">Hall of Legends</h2><p class="sub">A permanent home for the players who set the academy standard.</p>`;g.appendChild(l);const h=document.createElement("div");h.className="elite-hall";h.innerHTML=`<article class="elite-hall-card"><div class="elite-medal">01</div><h3>THE STANDARD</h3><p>The academy's defining performer.</p><b>ELITE GRADUATE</b></article><article class="elite-hall-card"><div class="elite-medal">02</div><h3>THE CLUTCH</h3><p>Exceptional competitive composure.</p><b>COMPETITIVE EXCELLENCE</b></article><article class="elite-hall-card"><div class="elite-medal">03</div><h3>THE PRECISION</h3><p>Outstanding mechanics and accuracy.</p><b>MECHANICAL MASTERY</b></article>`;g.appendChild(h)}
+ window.renderNetworkStats=function(){
+  const n=(window.data&&window.data.network)||{recruits:0,joinedThisWeek:0,vipStudents:0,esportsTrack:0};
+  [["netRecruits",n.recruits],["netJoinedWeek",n.joinedThisWeek],["netVip",n.vipStudents],["netEsports",n.esportsTrack]].forEach(([id,val])=>{
+   const el=document.getElementById(id);if(!el)return;
+   val=Math.max(0,parseInt(val,10)||0);clearInterval(el._iv);
+   let cur=0;const step=Math.max(1,Math.round(val/40));
+   el._iv=setInterval(()=>{cur+=step;if(cur>=val){cur=val;clearInterval(el._iv)}el.textContent=cur.toLocaleString();},20);
+  });
+  const btn=document.getElementById("networkEditBtn");
+  if(btn)btn.style.display=window.isAdmin?"inline-block":"none";
+ };
+ window.renderNetworkStats();
+})();
 </script>
 </body>
 </html>
