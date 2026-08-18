@@ -136,7 +136,7 @@ linear-gradient(180deg,transparent 40%,rgba(0,0,0,.75));}
 .notice{padding:15px 17px;border:1px solid rgba(255,90,31,.22);background:rgba(255,90,31,.05);border-radius:13px;color:#cdd3dd;font-size:12.5px}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{padding:22px;border:1px solid var(--line);border-radius:16px;background:#0a0c11;transition:.25s}.step:hover{border-color:rgba(255,90,31,.4);transform:translateY(-4px)}.step i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(255,90,31,.12);color:var(--ember);font-style:normal;font-weight:900;margin-bottom:12px;font-family:var(--font-display);font-size:13px}
 .footer{border-top:1px solid var(--line);padding:45px 0;color:var(--muted);font-size:12.5px;position:relative;z-index:1}.footergrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px}.footer h4{color:#fff;margin-bottom:13px;font-family:var(--font-display);font-size:12px;letter-spacing:1px}.footer a{display:block;margin:8px 0;transition:.2s}.footer a:hover{color:var(--ember)}
-.form{display:grid;gap:13px;max-width:650px}.input{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:11px;background:#08090d;color:#fff;outline:none;font-family:var(--font-body);font-weight:600;transition:.2s}.input:focus{border-color:rgba(255,90,31,.6);box-shadow:0 0 0 3px rgba(255,90,31,.1)}textarea.input{min-height:130px;resize:vertical}
+.form{display:grid;gap:13px;max-width:650px}.input{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:11px;background:#08090d;color:#fff;outline:none;font-family:var(--font-body);font-weight:600;transition:.2s}.input:focus{border-color:rgba(255,90,31,.6);box-shadow:0 0 0 3px rgba(255,90,31,.1)}textarea.input{min-height:130px;resize:vertical}select.input{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) center,calc(100% - 15px) center;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
 .adminbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.adminbar button{padding:10px 13px;border:1px solid var(--line);background:#0c0f16;color:#fff;border-radius:10px;font-weight:700;transition:.2s}.adminbar button:hover{border-color:var(--ember);background:rgba(255,90,31,.08)}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}.modal.show{display:flex}.modalbox{width:min(480px,100%);background:#0c0f16;border:1px solid var(--line);border-radius:20px;padding:25px;box-shadow:0 30px 100px #000;animation:in .3s ease}
 .modalbox h2{font-family:var(--font-display);font-size:20px;text-transform:uppercase}
@@ -552,7 +552,7 @@ body:after{
   <article class="card plan special"><div class="badge p">EXTRA</div><h3>SPECIAL COACHING</h3><div class="price" id="specialPrice">₦X,XXX+</div><small class="sub">Private / extra coaching • available to FREE or VIP students</small><ul style="margin-top:20px"><li>Personal guidance</li><li>Custom training plan</li><li>Extra practice sessions</li><li>Direct coach support</li></ul><div class="bottom"><button class="ghost" onclick="register()">ASK ABOUT COACHING</button></div></article>
 </div><div class="notice" style="margin-top:18px">Package prices are controlled by the academy admin and can be changed without redesigning the website.</div></div></section>
 
-<section id="leaderboard" class="page"><div class="container section"><div class="eyebrow">Recognition</div><h2 class="title">Outstanding Graduates</h2><p class="sub">Only exceptional graduates appear here. The board can be updated by the academy admin.</p><div id="leaderAdminBar" style="display:none;margin-top:20px;text-align:right"><button class="memberedit" onclick="addLeader()">+ Add entry</button></div><div class="tablewrap" style="margin-top:12px"><table class="table"><thead><tr><th>Rank</th><th>Graduate</th><th>Track</th><th>Session</th><th>Score</th><th>Achievement</th><th id="leaderActionHead" style="display:none">Admin</th></tr></thead><tbody id="leaderRows"></tbody></table></div></div></section>
+<section id="leaderboard" class="page"><div class="container section"><div class="eyebrow">Recognition</div><h2 class="title">Outstanding Graduates</h2><p class="sub">Only exceptional graduates appear here. The board can be updated by the academy admin.</p><div id="leaderAdminBar" style="display:none;margin-top:20px;gap:10px;flex-wrap:wrap"><button class="memberedit" onclick="openLeaderModal()">+ Add entry</button><button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="clearAllLeaders()">Clear all entries</button></div><div id="leaderManage" style="display:none;margin-top:14px"></div><div class="tablewrap" style="margin-top:20px"><table class="table"><thead><tr><th>Rank</th><th>Graduate</th><th>Track</th><th>Session</th><th>Score</th><th>Achievement</th></tr></thead><tbody id="leaderRows"></tbody></table></div></div></section>
 
 <section id="graduates" class="page"><div class="container section"><div class="eyebrow">Hall of achievement</div><h2 class="title">Our Graduates</h2><div class="grid3" id="graduateCards" style="margin-top:25px"></div></div></section>
 
@@ -562,12 +562,14 @@ body:after{
 
 <section id="contact" class="page"><div class="container section"><div class="eyebrow">Contact</div><h2 class="title">Ready to begin?</h2><p class="sub">Registration is handled through Telegram, by track. No student login is required on the public website.</p><div class="actions" style="flex-wrap:wrap;gap:12px"><button class="cta" onclick="registerEsports()">MESSAGE ESPORTS COACH ↗</button><button class="ghost" onclick="registerHeadshot()">MESSAGE HEADSHOT & PVP COACH ↗</button></div></div></section>
 
-<section id="admin" class="page"><div class="container section"><div class="eyebrow">Restricted area</div><h2 class="title">Admin Control Center</h2><p class="sub">Changes made here save to the server and are visible to every visitor.</p><div class="card" style="margin-top:25px"><div class="adminbar"><button onclick="editTotalMembers()">Edit total members joined</button><button onclick="editNetwork()">Edit network stats</button><button onclick="editPrices()">Edit package prices</button><button onclick="addLeader()">Add leaderboard entry</button><button onclick="addAnnouncement()">Add announcement</button><button onclick="adminLogout()">Log out</button></div><div class="stats"><div class="stat"><strong id="s1">500+</strong><span>Students trained</span></div><div class="stat"><strong id="s2">120+</strong><span>Graduates</span></div><div class="stat"><strong id="s3">25+</strong><span>Tournaments</span></div><div class="stat"><strong id="s4">92%</strong><span>Success rate</span></div></div></div></div></section>
+<section id="admin" class="page"><div class="container section"><div class="eyebrow">Restricted area</div><h2 class="title">Admin Control Center</h2><p class="sub">Changes made here save to the server and are visible to every visitor.</p><div class="card" style="margin-top:25px"><div class="adminbar"><button onclick="editTotalMembers()">Edit total members joined</button><button onclick="editNetwork()">Edit network stats</button><button onclick="editPrices()">Edit package prices</button><button onclick="openLeaderModal()">Add leaderboard entry</button><button onclick="location.hash='leaderboard'">Manage leaderboard</button><button onclick="addAnnouncement()">Add announcement</button><button onclick="adminLogout()">Log out</button></div><div class="stats"><div class="stat"><strong id="s1">500+</strong><span>Students trained</span></div><div class="stat"><strong id="s2">120+</strong><span>Graduates</span></div><div class="stat"><strong id="s3">25+</strong><span>Tournaments</span></div><div class="stat"><strong id="s4">92%</strong><span>Success rate</span></div></div></div></div></section>
 </main>
 
 <footer class="footer"><div class="container footergrid"><div><div class="logo">S<b>Y</b><small>ACADEMY</small></div><p style="margin-top:16px">Building gamers. Building champions.</p></div><div><h4>ACADEMY</h4><a href="#training">Training</a><a href="#packages">Packages</a><a href="#graduates">Graduates</a></div><div><h4>EXPLORE</h4><a href="#leaderboard">Leaderboard</a><a href="#announcements">Announcements</a><a href="#about">About</a></div><div><h4>FOUNDERS</h4><p>Scott & Yami</p><p style="margin-top:8px">© 2026 SY Academy</p></div></div></footer>
 
 <div class="modal" id="loginModal"><div class="modalbox"><h2>Admin Access</h2><p class="sub" style="margin:8px 0 18px">Only authorized academy administrators should use this area.</p><div class="form"><input class="input" id="adminPass" type="password" placeholder="Admin password" onkeydown="if(event.key==='Enter')adminLogin()"><button class="cta" onclick="adminLogin()">LOGIN</button><button class="ghost" onclick="closeModal()">CANCEL</button></div></div></div>
+
+<div class="modal" id="leaderModal"><div class="modalbox"><h2 id="leaderModalTitle">Add Leaderboard Entry</h2><p class="sub" style="margin:8px 0 18px">Fill in the graduate's details below.</p><div class="form"><input class="input" id="lfTag" placeholder="Graduate / gamer tag"><select class="input" id="lfTrack"><option value="Esports">Esports</option><option value="Headshot & PvP">Headshot & PvP</option></select><input class="input" id="lfSession" placeholder="Session (e.g. Session 06)"><input class="input" id="lfScore" placeholder="Score (e.g. 95%)"><input class="input" id="lfAch" placeholder="Achievement (e.g. Top Performer)"><button class="cta" onclick="submitLeaderForm()">SAVE</button><button class="ghost" onclick="closeLeaderModal()">CANCEL</button></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -605,19 +607,27 @@ function refreshAdminUI(){
  const netBtn=document.getElementById("networkEditBtn");
  if(netBtn)netBtn.style.display=isAdmin?"inline-block":"none";
  const leaderBar=document.getElementById("leaderAdminBar");
- if(leaderBar)leaderBar.style.display=isAdmin?"block":"none";
- const leaderHead=document.getElementById("leaderActionHead");
- if(leaderHead)leaderHead.style.display=isAdmin?"table-cell":"none";
- document.querySelectorAll(".leaderAction").forEach(td=>td.style.display=isAdmin?"table-cell":"none");
+ if(leaderBar)leaderBar.style.display=isAdmin?"flex":"none";
+ const leaderManage=document.getElementById("leaderManage");
+ if(leaderManage)leaderManage.style.display=isAdmin?"block":"none";
+}
+function renderLeaderManage(){
+ const box=document.getElementById("leaderManage");
+ if(!box)return;
+ if(!isAdmin||!data.leaders.length){box.innerHTML="";return}
+ box.innerHTML=`<div class="card" style="padding:16px"><div style="font-size:11px;letter-spacing:1.5px;color:var(--muted);font-weight:800;text-transform:uppercase;margin-bottom:12px">Manage entries</div>`+
+  data.leaders.map((x,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 0;border-top:1px solid var(--line)"><span><b>${x[1]}</b><br><small class="sub" style="font-size:11px">${x[2]} • ${x[3]} • ${x[4]}</small></span><span style="display:flex;gap:8px"><button class="memberedit" onclick="openLeaderModal(${i})">Edit</button><button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="deleteLeaderRow(${i})">Delete</button></span></div>`).join("")+
+  `</div>`;
 }
 function render(){
  animateCounter(document.getElementById("totalMembersCount"),data.totalMembers);
  if(window.renderNetworkStats)window.renderNetworkStats();
  freePrice.textContent=data.prices.free;vipPrice.textContent=data.prices.vip;specialPrice.textContent=data.prices.special;
- leaderRows.innerHTML=data.leaders.map((x,i)=>`<tr><td class="rank">${x[0]}</td><td><b>${x[1]}</b></td><td>${x[2]}</td><td>${x[3]}</td><td><b>${x[4]}</b></td><td>${x[5]}</td><td class="leaderAction" style="display:none;white-space:nowrap"><button class="memberedit" onclick="editLeaderRow(${i})">Edit</button> <button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="deleteLeaderRow(${i})">Delete</button></td></tr>`).join("");
+ leaderRows.innerHTML=data.leaders.map(x=>`<tr><td class="rank">${x[0]}</td><td><b>${x[1]}</b></td><td>${x[2]}</td><td>${x[3]}</td><td><b>${x[4]}</b></td><td>${x[5]}</td></tr>`).join("");
  graduateCards.innerHTML=data.graduates.map(x=>`<article class="card"><div class="trackicon">♛</div><h3>${x[0]}</h3><p class="sub">${x[1]} • ${x[2]}</p><div style="margin-top:18px;color:var(--ember);font-weight:800">${x[3]}</div></article>`).join("");
  announcementCards.innerHTML=data.announcements.map(x=>`<article class="card"><div class="eyebrow">${x[0]}</div><h3 style="margin:10px 0">${x[1]}</h3><p class="sub">Published by SY Academy administration.</p></article>`).join("");
  refreshAdminUI();
+ renderLeaderManage();
 }
 function route(){
  let r=location.hash.slice(1)||"home";
@@ -679,24 +689,36 @@ async function editPrices(){
  try{await api("/api/admin/prices",{method:"POST",body:JSON.stringify({vip:v,special:s})});await loadData();toast("Prices updated.")}
  catch(e){toast(e.message)}
 }
-async function addLeader(){
+let leaderEditIndex=null;
+function openLeaderModal(i){
  if(!isAdmin){toast("Admin login required.");return}
- let n=prompt("Graduate/gamer tag:");if(!n)return;
- let score=prompt("Overall score:","90%");let ach=prompt("Achievement:","Outstanding Performer");
- try{await api("/api/admin/leaders",{method:"POST",body:JSON.stringify({tag:n,score:score||"90%",achievement:ach||"Outstanding Performer"})});await loadData();toast("Leaderboard updated.")}
- catch(e){toast(e.message)}
+ leaderEditIndex=(typeof i==="number")?i:null;
+ const row=leaderEditIndex!==null?data.leaders[leaderEditIndex]:null;
+ document.getElementById("leaderModalTitle").textContent=row?"Edit Leaderboard Entry":"Add Leaderboard Entry";
+ document.getElementById("lfTag").value=row?row[1]:"";
+ document.getElementById("lfTrack").value=row?row[2]:"Esports";
+ document.getElementById("lfSession").value=row?row[3]:"";
+ document.getElementById("lfScore").value=row?row[4]:"";
+ document.getElementById("lfAch").value=row?row[5]:"";
+ document.getElementById("leaderModal").classList.add("show");
 }
-async function editLeaderRow(i){
- if(!isAdmin){toast("Admin login required.");return}
- const row=data.leaders[i];if(!row)return;
- let tag=prompt("Graduate/gamer tag:",row[1]);if(tag===null)return;
- let track=prompt("Track:",row[2]);if(track===null)return;
- let session=prompt("Session:",row[3]);if(session===null)return;
- let score=prompt("Score:",row[4]);if(score===null)return;
- let ach=prompt("Achievement:",row[5]);if(ach===null)return;
+function closeLeaderModal(){document.getElementById("leaderModal").classList.remove("show")}
+async function submitLeaderForm(){
+ const tag=document.getElementById("lfTag").value.trim();
+ const track=document.getElementById("lfTrack").value;
+ const session=document.getElementById("lfSession").value.trim();
+ const score=document.getElementById("lfScore").value.trim();
+ const ach=document.getElementById("lfAch").value.trim();
+ if(!tag){toast("Enter a graduate/gamer tag.");return}
  try{
-  await api("/api/admin/leaders/edit",{method:"POST",body:JSON.stringify({index:i,tag,track,session,score,achievement:ach})});
-  await loadData();toast("Entry updated.")
+  if(leaderEditIndex!==null){
+   await api("/api/admin/leaders/edit",{method:"POST",body:JSON.stringify({index:leaderEditIndex,tag,track,session,score,achievement:ach})});
+   toast("Entry updated.")
+  }else{
+   await api("/api/admin/leaders",{method:"POST",body:JSON.stringify({tag,track,session,score:score||"90%",achievement:ach||"Outstanding Performer"})});
+   toast("Entry added.")
+  }
+  closeLeaderModal();await loadData();
  }catch(e){toast(e.message)}
 }
 async function deleteLeaderRow(i){
@@ -706,6 +728,15 @@ async function deleteLeaderRow(i){
  try{
   await api("/api/admin/leaders/delete",{method:"POST",body:JSON.stringify({index:i})});
   await loadData();toast("Entry removed.")
+ }catch(e){toast(e.message)}
+}
+async function clearAllLeaders(){
+ if(!isAdmin){toast("Admin login required.");return}
+ if(!data.leaders.length){toast("Leaderboard is already empty.");return}
+ if(!confirm("Remove ALL leaderboard entries? This can't be undone."))return;
+ try{
+  await api("/api/admin/leaders/clear",{method:"POST"});
+  await loadData();toast("Leaderboard cleared.")
  }catch(e){toast(e.message)}
 }
 async function addAnnouncement(){
