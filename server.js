@@ -86,7 +86,18 @@ app.post("/api/admin/members", requireAdmin, (req, res) => {
   writeData(data);
   res.json({ ok: true, totalMembers: value });
 });
-
+app.post("/api/admin/network", requireAdmin, (req, res) => {
+  const { recruits, joinedThisWeek, vipStudents, esportsTrack } = req.body;
+  const nums = { recruits, joinedThisWeek, vipStudents, esportsTrack };
+  const data = readData();
+  for (const key of Object.keys(nums)) {
+    const n = parseInt(nums[key], 10);
+    if (isNaN(n) || n < 0) return res.status(400).json({ error: `Invalid value for ${key}.` });
+    data.network[key] = n;
+  }
+  writeData(data);
+  res.json({ ok: true, network: data.network });
+});
 app.post("/api/admin/prices", requireAdmin, (req, res) => {
   const { vip, special } = req.body;
   const data = readData();
