@@ -154,6 +154,43 @@ app.post("/api/admin/leaders/clear", requireAdmin, (req, res) => {
   res.json({ ok: true, leaders: data.leaders });
 });
 
+app.post("/api/admin/graduates", requireAdmin, (req, res) => {
+  const { tag, track, session, achievement } = req.body;
+  if (!tag) return res.status(400).json({ error: "Gamer tag required." });
+  const data = readData();
+  data.graduates.push([tag, track || "Esports", session || "Current Session", achievement || "Outstanding Performer"]);
+  writeData(data);
+  res.json({ ok: true, graduates: data.graduates });
+});
+
+app.post("/api/admin/graduates/edit", requireAdmin, (req, res) => {
+  const { index, tag, track, session, achievement } = req.body;
+  const data = readData();
+  const i = parseInt(index, 10);
+  if (isNaN(i) || i < 0 || i >= data.graduates.length) return res.status(400).json({ error: "Invalid entry." });
+  const row = data.graduates[i];
+  data.graduates[i] = [tag || row[0], track || row[1], session || row[2], achievement || row[3]];
+  writeData(data);
+  res.json({ ok: true, graduates: data.graduates });
+});
+
+app.post("/api/admin/graduates/delete", requireAdmin, (req, res) => {
+  const { index } = req.body;
+  const data = readData();
+  const i = parseInt(index, 10);
+  if (isNaN(i) || i < 0 || i >= data.graduates.length) return res.status(400).json({ error: "Invalid entry." });
+  data.graduates.splice(i, 1);
+  writeData(data);
+  res.json({ ok: true, graduates: data.graduates });
+});
+
+app.post("/api/admin/graduates/clear", requireAdmin, (req, res) => {
+  const data = readData();
+  data.graduates = [];
+  writeData(data);
+  res.json({ ok: true, graduates: data.graduates });
+});
+
 app.post("/api/admin/announcements", requireAdmin, (req, res) => {
   const { title, message } = req.body;
   if (!title || !message) return res.status(400).json({ error: "Title and message required." });

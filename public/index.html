@@ -554,7 +554,7 @@ body:after{
 
 <section id="leaderboard" class="page"><div class="container section"><div class="eyebrow">Recognition</div><h2 class="title">Outstanding Graduates</h2><p class="sub">Only exceptional graduates appear here. The board can be updated by the academy admin.</p><div id="leaderAdminBar" style="display:none;margin-top:20px;gap:10px;flex-wrap:wrap"><button class="memberedit" onclick="openLeaderModal()">+ Add entry</button><button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="clearAllLeaders()">Clear all entries</button></div><div id="leaderManage" style="display:none;margin-top:14px"></div><div class="tablewrap" style="margin-top:20px"><table class="table"><thead><tr><th>Rank</th><th>Graduate</th><th>Track</th><th>Session</th><th>Score</th><th>Achievement</th></tr></thead><tbody id="leaderRows"></tbody></table></div></div></section>
 
-<section id="graduates" class="page"><div class="container section"><div class="eyebrow">Hall of achievement</div><h2 class="title">Our Graduates</h2><div class="grid3" id="graduateCards" style="margin-top:25px"></div></div></section>
+<section id="graduates" class="page"><div class="container section"><div class="eyebrow">Hall of achievement</div><h2 class="title">Our Graduates</h2><div id="graduateAdminBar" style="display:none;margin-top:20px;gap:10px;flex-wrap:wrap"><button class="memberedit" onclick="openGraduateModal()">+ Add graduate</button><button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="clearAllGraduates()">Clear all graduates</button></div><div id="graduateManage" style="display:none;margin-top:14px"></div><div class="grid3" id="graduateCards" style="margin-top:25px"></div></div></section>
 
 <section id="academy" class="page"><div class="container section"><div class="eyebrow">How SY works</div><h2 class="title">From enrolment to graduation.</h2><div class="grid2" style="margin-top:28px"><div class="card"><h3>01 • REGISTER</h3><p class="sub">Click Register Now and message the academy through Telegram.</p></div><div class="card"><h3>02 • CHOOSE A TRACK</h3><p class="sub">Select Headshot & PvP or Esports.</p></div><div class="card"><h3>03 • TRAIN FOR 3 MONTHS</h3><p class="sub">Follow the session progression and assessments.</p></div><div class="card"><h3>04 • GRADUATE OR REPEAT</h3><p class="sub">Students who meet the standard graduate. Others repeat and continue developing.</p></div></div></div></section>
 
@@ -562,7 +562,7 @@ body:after{
 
 <section id="contact" class="page"><div class="container section"><div class="eyebrow">Contact</div><h2 class="title">Ready to begin?</h2><p class="sub">Registration is handled through Telegram, by track. No student login is required on the public website.</p><div class="actions" style="flex-wrap:wrap;gap:12px"><button class="cta" onclick="registerEsports()">MESSAGE ESPORTS COACH ↗</button><button class="ghost" onclick="registerHeadshot()">MESSAGE HEADSHOT & PVP COACH ↗</button></div></div></section>
 
-<section id="admin" class="page"><div class="container section"><div class="eyebrow">Restricted area</div><h2 class="title">Admin Control Center</h2><p class="sub">Changes made here save to the server and are visible to every visitor.</p><div class="card" style="margin-top:25px"><div class="adminbar"><button onclick="editTotalMembers()">Edit total members joined</button><button onclick="editNetwork()">Edit network stats</button><button onclick="editPrices()">Edit package prices</button><button onclick="openLeaderModal()">Add leaderboard entry</button><button onclick="location.hash='leaderboard'">Manage leaderboard</button><button onclick="addAnnouncement()">Add announcement</button><button onclick="adminLogout()">Log out</button></div><div class="stats"><div class="stat"><strong id="s1">500+</strong><span>Students trained</span></div><div class="stat"><strong id="s2">120+</strong><span>Graduates</span></div><div class="stat"><strong id="s3">25+</strong><span>Tournaments</span></div><div class="stat"><strong id="s4">92%</strong><span>Success rate</span></div></div></div></div></section>
+<section id="admin" class="page"><div class="container section"><div class="eyebrow">Restricted area</div><h2 class="title">Admin Control Center</h2><p class="sub">Changes made here save to the server and are visible to every visitor.</p><div class="card" style="margin-top:25px"><div class="adminbar"><button onclick="editTotalMembers()">Edit total members joined</button><button onclick="editNetwork()">Edit network stats</button><button onclick="editPrices()">Edit package prices</button><button onclick="openLeaderModal()">Add leaderboard entry</button><button onclick="location.hash='leaderboard'">Manage leaderboard</button><button onclick="location.hash='graduates'">Manage graduates</button><button onclick="addAnnouncement()">Add announcement</button><button onclick="adminLogout()">Log out</button></div><div class="stats"><div class="stat"><strong id="s1">500+</strong><span>Students trained</span></div><div class="stat"><strong id="s2">120+</strong><span>Graduates</span></div><div class="stat"><strong id="s3">25+</strong><span>Tournaments</span></div><div class="stat"><strong id="s4">92%</strong><span>Success rate</span></div></div></div></div></section>
 </main>
 
 <footer class="footer"><div class="container footergrid"><div><div class="logo">S<b>Y</b><small>ACADEMY</small></div><p style="margin-top:16px">Building gamers. Building champions.</p></div><div><h4>ACADEMY</h4><a href="#training">Training</a><a href="#packages">Packages</a><a href="#graduates">Graduates</a></div><div><h4>EXPLORE</h4><a href="#leaderboard">Leaderboard</a><a href="#announcements">Announcements</a><a href="#about">About</a></div><div><h4>FOUNDERS</h4><p>Scott & Yami</p><p style="margin-top:8px">© 2026 SY Academy</p></div></div></footer>
@@ -570,6 +570,8 @@ body:after{
 <div class="modal" id="loginModal"><div class="modalbox"><h2>Admin Access</h2><p class="sub" style="margin:8px 0 18px">Only authorized academy administrators should use this area.</p><div class="form"><input class="input" id="adminPass" type="password" placeholder="Admin password" onkeydown="if(event.key==='Enter')adminLogin()"><button class="cta" onclick="adminLogin()">LOGIN</button><button class="ghost" onclick="closeModal()">CANCEL</button></div></div></div>
 
 <div class="modal" id="leaderModal"><div class="modalbox"><h2 id="leaderModalTitle">Add Leaderboard Entry</h2><p class="sub" style="margin:8px 0 18px">Fill in the graduate's details below.</p><div class="form"><input class="input" id="lfTag" placeholder="Graduate / gamer tag"><select class="input" id="lfTrack"><option value="Esports">Esports</option><option value="Headshot & PvP">Headshot & PvP</option></select><input class="input" id="lfSession" placeholder="Session (e.g. Session 06)"><input class="input" id="lfScore" placeholder="Score (e.g. 95%)"><input class="input" id="lfAch" placeholder="Achievement (e.g. Top Performer)"><button class="cta" onclick="submitLeaderForm()">SAVE</button><button class="ghost" onclick="closeLeaderModal()">CANCEL</button></div></div></div>
+
+<div class="modal" id="graduateModal"><div class="modalbox"><h2 id="graduateModalTitle">Add Graduate</h2><p class="sub" style="margin:8px 0 18px">Fill in the graduate's details below.</p><div class="form"><input class="input" id="gfTag" placeholder="Graduate / gamer tag"><select class="input" id="gfTrack"><option value="Esports">Esports</option><option value="Headshot & PvP">Headshot & PvP</option></select><input class="input" id="gfSession" placeholder="Session (e.g. Session 06)"><input class="input" id="gfAch" placeholder="Achievement (e.g. Top Performer)"><button class="cta" onclick="submitGraduateForm()">SAVE</button><button class="ghost" onclick="closeGraduateModal()">CANCEL</button></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -610,6 +612,10 @@ function refreshAdminUI(){
  if(leaderBar)leaderBar.style.display=isAdmin?"flex":"none";
  const leaderManage=document.getElementById("leaderManage");
  if(leaderManage)leaderManage.style.display=isAdmin?"block":"none";
+ const gradBar=document.getElementById("graduateAdminBar");
+ if(gradBar)gradBar.style.display=isAdmin?"flex":"none";
+ const gradManage=document.getElementById("graduateManage");
+ if(gradManage)gradManage.style.display=isAdmin?"block":"none";
 }
 function renderLeaderManage(){
  const box=document.getElementById("leaderManage");
@@ -617,6 +623,14 @@ function renderLeaderManage(){
  if(!isAdmin||!data.leaders.length){box.innerHTML="";return}
  box.innerHTML=`<div class="card" style="padding:16px"><div style="font-size:11px;letter-spacing:1.5px;color:var(--muted);font-weight:800;text-transform:uppercase;margin-bottom:12px">Manage entries</div>`+
   data.leaders.map((x,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 0;border-top:1px solid var(--line)"><span><b>${x[1]}</b><br><small class="sub" style="font-size:11px">${x[2]} • ${x[3]} • ${x[4]}</small></span><span style="display:flex;gap:8px"><button class="memberedit" onclick="openLeaderModal(${i})">Edit</button><button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="deleteLeaderRow(${i})">Delete</button></span></div>`).join("")+
+  `</div>`;
+}
+function renderGraduateManage(){
+ const box=document.getElementById("graduateManage");
+ if(!box)return;
+ if(!isAdmin||!data.graduates.length){box.innerHTML="";return}
+ box.innerHTML=`<div class="card" style="padding:16px"><div style="font-size:11px;letter-spacing:1.5px;color:var(--muted);font-weight:800;text-transform:uppercase;margin-bottom:12px">Manage graduates</div>`+
+  data.graduates.map((x,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 0;border-top:1px solid var(--line)"><span><b>${x[0]}</b><br><small class="sub" style="font-size:11px">${x[1]} • ${x[2]} • ${x[3]}</small></span><span style="display:flex;gap:8px"><button class="memberedit" onclick="openGraduateModal(${i})">Edit</button><button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="deleteGraduateRow(${i})">Delete</button></span></div>`).join("")+
   `</div>`;
 }
 function render(){
@@ -628,6 +642,7 @@ function render(){
  announcementCards.innerHTML=data.announcements.map(x=>`<article class="card"><div class="eyebrow">${x[0]}</div><h3 style="margin:10px 0">${x[1]}</h3><p class="sub">Published by SY Academy administration.</p></article>`).join("");
  refreshAdminUI();
  renderLeaderManage();
+ renderGraduateManage();
 }
 function route(){
  let r=location.hash.slice(1)||"home";
@@ -737,6 +752,54 @@ async function clearAllLeaders(){
  try{
   await api("/api/admin/leaders/clear",{method:"POST"});
   await loadData();toast("Leaderboard cleared.")
+ }catch(e){toast(e.message)}
+}
+let graduateEditIndex=null;
+function openGraduateModal(i){
+ if(!isAdmin){toast("Admin login required.");return}
+ graduateEditIndex=(typeof i==="number")?i:null;
+ const row=graduateEditIndex!==null?data.graduates[graduateEditIndex]:null;
+ document.getElementById("graduateModalTitle").textContent=row?"Edit Graduate":"Add Graduate";
+ document.getElementById("gfTag").value=row?row[0]:"";
+ document.getElementById("gfTrack").value=row?row[1]:"Esports";
+ document.getElementById("gfSession").value=row?row[2]:"";
+ document.getElementById("gfAch").value=row?row[3]:"";
+ document.getElementById("graduateModal").classList.add("show");
+}
+function closeGraduateModal(){document.getElementById("graduateModal").classList.remove("show")}
+async function submitGraduateForm(){
+ const tag=document.getElementById("gfTag").value.trim();
+ const track=document.getElementById("gfTrack").value;
+ const session=document.getElementById("gfSession").value.trim();
+ const ach=document.getElementById("gfAch").value.trim();
+ if(!tag){toast("Enter a graduate/gamer tag.");return}
+ try{
+  if(graduateEditIndex!==null){
+   await api("/api/admin/graduates/edit",{method:"POST",body:JSON.stringify({index:graduateEditIndex,tag,track,session,achievement:ach})});
+   toast("Graduate updated.")
+  }else{
+   await api("/api/admin/graduates",{method:"POST",body:JSON.stringify({tag,track,session,achievement:ach})});
+   toast("Graduate added.")
+  }
+  closeGraduateModal();await loadData();
+ }catch(e){toast(e.message)}
+}
+async function deleteGraduateRow(i){
+ if(!isAdmin){toast("Admin login required.");return}
+ const row=data.graduates[i];if(!row)return;
+ if(!confirm(`Remove ${row[0]} from the graduates list?`))return;
+ try{
+  await api("/api/admin/graduates/delete",{method:"POST",body:JSON.stringify({index:i})});
+  await loadData();toast("Graduate removed.")
+ }catch(e){toast(e.message)}
+}
+async function clearAllGraduates(){
+ if(!isAdmin){toast("Admin login required.");return}
+ if(!data.graduates.length){toast("Graduates list is already empty.");return}
+ if(!confirm("Remove ALL graduates? This can't be undone."))return;
+ try{
+  await api("/api/admin/graduates/clear",{method:"POST"});
+  await loadData();toast("Graduates list cleared.")
  }catch(e){toast(e.message)}
 }
 async function addAnnouncement(){
