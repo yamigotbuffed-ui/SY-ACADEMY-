@@ -552,7 +552,7 @@ body:after{
   <article class="card plan special"><div class="badge p">EXTRA</div><h3>SPECIAL COACHING</h3><div class="price" id="specialPrice">₦X,XXX+</div><small class="sub">Private / extra coaching • available to FREE or VIP students</small><ul style="margin-top:20px"><li>Personal guidance</li><li>Custom training plan</li><li>Extra practice sessions</li><li>Direct coach support</li></ul><div class="bottom"><button class="ghost" onclick="register()">ASK ABOUT COACHING</button></div></article>
 </div><div class="notice" style="margin-top:18px">Package prices are controlled by the academy admin and can be changed without redesigning the website.</div></div></section>
 
-<section id="leaderboard" class="page"><div class="container section"><div class="eyebrow">Recognition</div><h2 class="title">Outstanding Graduates</h2><p class="sub">Only exceptional graduates appear here. The board can be updated by the academy admin.</p><div class="tablewrap" style="margin-top:25px"><table class="table"><thead><tr><th>Rank</th><th>Graduate</th><th>Track</th><th>Session</th><th>Score</th><th>Achievement</th></tr></thead><tbody id="leaderRows"></tbody></table></div></div></section>
+<section id="leaderboard" class="page"><div class="container section"><div class="eyebrow">Recognition</div><h2 class="title">Outstanding Graduates</h2><p class="sub">Only exceptional graduates appear here. The board can be updated by the academy admin.</p><div id="leaderAdminBar" style="display:none;margin-top:20px;text-align:right"><button class="memberedit" onclick="addLeader()">+ Add entry</button></div><div class="tablewrap" style="margin-top:12px"><table class="table"><thead><tr><th>Rank</th><th>Graduate</th><th>Track</th><th>Session</th><th>Score</th><th>Achievement</th><th id="leaderActionHead" style="display:none">Admin</th></tr></thead><tbody id="leaderRows"></tbody></table></div></div></section>
 
 <section id="graduates" class="page"><div class="container section"><div class="eyebrow">Hall of achievement</div><h2 class="title">Our Graduates</h2><div class="grid3" id="graduateCards" style="margin-top:25px"></div></div></section>
 
@@ -604,15 +604,20 @@ function refreshAdminUI(){
  if(btn)btn.style.display=isAdmin?"inline-block":"none";
  const netBtn=document.getElementById("networkEditBtn");
  if(netBtn)netBtn.style.display=isAdmin?"inline-block":"none";
+ const leaderBar=document.getElementById("leaderAdminBar");
+ if(leaderBar)leaderBar.style.display=isAdmin?"block":"none";
+ const leaderHead=document.getElementById("leaderActionHead");
+ if(leaderHead)leaderHead.style.display=isAdmin?"table-cell":"none";
+ document.querySelectorAll(".leaderAction").forEach(td=>td.style.display=isAdmin?"table-cell":"none");
 }
 function render(){
  animateCounter(document.getElementById("totalMembersCount"),data.totalMembers);
- refreshAdminUI();
  if(window.renderNetworkStats)window.renderNetworkStats();
  freePrice.textContent=data.prices.free;vipPrice.textContent=data.prices.vip;specialPrice.textContent=data.prices.special;
- leaderRows.innerHTML=data.leaders.map(x=>`<tr><td class="rank">${x[0]}</td><td><b>${x[1]}</b></td><td>${x[2]}</td><td>${x[3]}</td><td><b>${x[4]}</b></td><td>${x[5]}</td></tr>`).join("");
+ leaderRows.innerHTML=data.leaders.map((x,i)=>`<tr><td class="rank">${x[0]}</td><td><b>${x[1]}</b></td><td>${x[2]}</td><td>${x[3]}</td><td><b>${x[4]}</b></td><td>${x[5]}</td><td class="leaderAction" style="display:none;white-space:nowrap"><button class="memberedit" onclick="editLeaderRow(${i})">Edit</button> <button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="deleteLeaderRow(${i})">Delete</button></td></tr>`).join("");
  graduateCards.innerHTML=data.graduates.map(x=>`<article class="card"><div class="trackicon">♛</div><h3>${x[0]}</h3><p class="sub">${x[1]} • ${x[2]}</p><div style="margin-top:18px;color:var(--ember);font-weight:800">${x[3]}</div></article>`).join("");
  announcementCards.innerHTML=data.announcements.map(x=>`<article class="card"><div class="eyebrow">${x[0]}</div><h3 style="margin:10px 0">${x[1]}</h3><p class="sub">Published by SY Academy administration.</p></article>`).join("");
+ refreshAdminUI();
 }
 function route(){
  let r=location.hash.slice(1)||"home";
@@ -680,6 +685,28 @@ async function addLeader(){
  let score=prompt("Overall score:","90%");let ach=prompt("Achievement:","Outstanding Performer");
  try{await api("/api/admin/leaders",{method:"POST",body:JSON.stringify({tag:n,score:score||"90%",achievement:ach||"Outstanding Performer"})});await loadData();toast("Leaderboard updated.")}
  catch(e){toast(e.message)}
+}
+async function editLeaderRow(i){
+ if(!isAdmin){toast("Admin login required.");return}
+ const row=data.leaders[i];if(!row)return;
+ let tag=prompt("Graduate/gamer tag:",row[1]);if(tag===null)return;
+ let track=prompt("Track:",row[2]);if(track===null)return;
+ let session=prompt("Session:",row[3]);if(session===null)return;
+ let score=prompt("Score:",row[4]);if(score===null)return;
+ let ach=prompt("Achievement:",row[5]);if(ach===null)return;
+ try{
+  await api("/api/admin/leaders/edit",{method:"POST",body:JSON.stringify({index:i,tag,track,session,score,achievement:ach})});
+  await loadData();toast("Entry updated.")
+ }catch(e){toast(e.message)}
+}
+async function deleteLeaderRow(i){
+ if(!isAdmin){toast("Admin login required.");return}
+ const row=data.leaders[i];if(!row)return;
+ if(!confirm(`Remove ${row[1]} from the leaderboard?`))return;
+ try{
+  await api("/api/admin/leaders/delete",{method:"POST",body:JSON.stringify({index:i})});
+  await loadData();toast("Entry removed.")
+ }catch(e){toast(e.message)}
 }
 async function addAnnouncement(){
  if(!isAdmin){toast("Admin login required.");return}

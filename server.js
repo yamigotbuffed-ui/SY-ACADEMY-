@@ -86,6 +86,7 @@ app.post("/api/admin/members", requireAdmin, (req, res) => {
   writeData(data);
   res.json({ ok: true, totalMembers: value });
 });
+
 app.post("/api/admin/network", requireAdmin, (req, res) => {
   const { recruits, joinedThisWeek, vipStudents, esportsTrack } = req.body;
   const nums = { recruits, joinedThisWeek, vipStudents, esportsTrack };
@@ -98,6 +99,7 @@ app.post("/api/admin/network", requireAdmin, (req, res) => {
   writeData(data);
   res.json({ ok: true, network: data.network });
 });
+
 app.post("/api/admin/prices", requireAdmin, (req, res) => {
   const { vip, special } = req.body;
   const data = readData();
@@ -119,6 +121,28 @@ app.post("/api/admin/leaders", requireAdmin, (req, res) => {
     score || "90%",
     achievement || "Outstanding Performer"
   ]);
+  writeData(data);
+  res.json({ ok: true, leaders: data.leaders });
+});
+
+app.post("/api/admin/leaders/edit", requireAdmin, (req, res) => {
+  const { index, tag, track, session, score, achievement } = req.body;
+  const data = readData();
+  const i = parseInt(index, 10);
+  if (isNaN(i) || i < 0 || i >= data.leaders.length) return res.status(400).json({ error: "Invalid entry." });
+  const row = data.leaders[i];
+  data.leaders[i] = [row[0], tag || row[1], track || row[2], session || row[3], score || row[4], achievement || row[5]];
+  writeData(data);
+  res.json({ ok: true, leaders: data.leaders });
+});
+
+app.post("/api/admin/leaders/delete", requireAdmin, (req, res) => {
+  const { index } = req.body;
+  const data = readData();
+  const i = parseInt(index, 10);
+  if (isNaN(i) || i < 0 || i >= data.leaders.length) return res.status(400).json({ error: "Invalid entry." });
+  data.leaders.splice(i, 1);
+  data.leaders.forEach((row, idx) => { row[0] = String(idx + 1); });
   writeData(data);
   res.json({ ok: true, leaders: data.leaders });
 });
