@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 
@@ -23,10 +24,37 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // ---------- data helpers ----------
 function readData() {
-  return JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+  const data = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+  if (!Array.isArray(data.vendors)) data.vendors = [];
+  if (!Array.isArray(data.products)) data.products = [];
+  return data;
 }
 function writeData(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
+function sanitizeForPublic(data) {
+  return {
+    ...data,
+    vendors: data.vendors.map(v => ({ id: v.id, username: v.username, storeName: v.storeName, contact: v.contact }))
+  };
+}
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+  return `${salt}:${hash}`;
+}
+function verifyPassword(password, stored) {
+  const [salt, hash] = (stored || "").split(":");
+  if (!salt || !hash) return false;
+  const check = crypto.scryptSync(password, salt, 64).toString("hex");
+  try {
+    return crypto.timingSafeEqual(Buffer.from(hash, "hex"), Buffer.from(check, "hex"));
+  } catch {
+    return false;
+  }
+}
+function newId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
 // ---------- auth middleware ----------
@@ -40,10 +68,24 @@ function requireAdmin(req, res, next) {
     res.status(401).json({ error: "Session expired. Log in again." });
   }
 }
+function requireVendor(req, res, next) {
+  const token = req.cookies.syvendor;
+  if (!token) return res.status(401).json({ error: "Not logged in." });
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    const data = readData();
+    const vendor = data.vendors.find(v => v.id === payload.vendorId);
+    if (!vendor) return res.status(401).json({ error: "Vendor account no longer exists." });
+    req.vendorId = payload.vendorId;
+    next();
+  } catch {
+    res.status(401).json({ error: "Session expired. Log in again." });
+  }
+}
 
 // ---------- public routes ----------
 app.get("/api/data", (req, res) => {
-  res.json(readData());
+  res.json(sanitizeForPublic(readData()));
 });
 
 app.get("/api/admin/status", (req, res) => {
@@ -198,6 +240,136 @@ app.post("/api/admin/announcements", requireAdmin, (req, res) => {
   data.announcements.unshift([title, message]);
   writeData(data);
   res.json({ ok: true, announcements: data.announcements });
+});
+
+// ---------- vendor auth ----------
+app.get("/api/vendor/status", (req, res) => {
+  const token = req.cookies.syvendor;
+  if (!token) return res.json({ loggedIn: false });
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    const data = readData();
+    const vendor = data.vendors.find(v => v.id === payload.vendorId);
+    if (!vendor) return res.json({ loggedIn: false });
+    res.json({ loggedIn: true, vendorId: vendor.id, storeName: vendor.storeName });
+  } catch {
+    res.json({ loggedIn: false });
+  }
+});
+
+app.post("/api/vendor/login", (req, res) => {
+  const { username, password } = req.body;
+  const data = readData();
+  const vendor = data.vendors.find(v => v.username === username);
+  if (!vendor || !verifyPassword(password, vendor.passwordHash)) {
+    return res.status(401).json({ error: "Wrong vendor username or password." });
+  }
+  const token = jwt.sign({ vendorId: vendor.id }, JWT_SECRET, { expiresIn: "12h" });
+  res.cookie("syvendor", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 12 * 60 * 60 * 1000
+  });
+  res.json({ ok: true });
+});
+
+app.post("/api/vendor/logout", (req, res) => {
+  res.clearCookie("syvendor");
+  res.json({ ok: true });
+});
+
+// ---------- vendor product management (own listings only) ----------
+app.post("/api/vendor/products", requireVendor, (req, res) => {
+  const { title, description, price } = req.body;
+  if (!title || price === undefined || price === "") return res.status(400).json({ error: "Title and price are required." });
+  const priceNum = Number(price);
+  if (isNaN(priceNum) || priceNum < 0) return res.status(400).json({ error: "Invalid price." });
+  const data = readData();
+  data.products.push({
+    id: newId(),
+    vendorId: req.vendorId,
+    title,
+    description: description || "",
+    price: priceNum,
+    status: "available"
+  });
+  writeData(data);
+  res.json({ ok: true });
+});
+
+app.post("/api/vendor/products/edit", requireVendor, (req, res) => {
+  const { id, title, description, price, status } = req.body;
+  const data = readData();
+  const p = data.products.find(x => x.id === id && x.vendorId === req.vendorId);
+  if (!p) return res.status(404).json({ error: "Listing not found." });
+  if (title) p.title = title;
+  if (description !== undefined) p.description = description;
+  if (price !== undefined && price !== "") {
+    const priceNum = Number(price);
+    if (isNaN(priceNum) || priceNum < 0) return res.status(400).json({ error: "Invalid price." });
+    p.price = priceNum;
+  }
+  if (status === "available" || status === "sold") p.status = status;
+  writeData(data);
+  res.json({ ok: true });
+});
+
+app.post("/api/vendor/products/delete", requireVendor, (req, res) => {
+  const { id } = req.body;
+  const data = readData();
+  const idx = data.products.findIndex(x => x.id === id && x.vendorId === req.vendorId);
+  if (idx === -1) return res.status(404).json({ error: "Listing not found." });
+  data.products.splice(idx, 1);
+  writeData(data);
+  res.json({ ok: true });
+});
+
+app.post("/api/vendor/products/clear", requireVendor, (req, res) => {
+  const data = readData();
+  data.products = data.products.filter(x => x.vendorId !== req.vendorId);
+  writeData(data);
+  res.json({ ok: true });
+});
+
+// ---------- admin: vendor accounts + marketplace moderation ----------
+app.post("/api/admin/vendors", requireAdmin, (req, res) => {
+  const { username, password, storeName, contact } = req.body;
+  if (!username || !password || !storeName) return res.status(400).json({ error: "Username, password, and store name are required." });
+  const data = readData();
+  if (data.vendors.some(v => v.username.toLowerCase() === username.toLowerCase())) {
+    return res.status(400).json({ error: "That username is already taken." });
+  }
+  data.vendors.push({
+    id: newId(),
+    username,
+    passwordHash: hashPassword(password),
+    storeName,
+    contact: contact || ""
+  });
+  writeData(data);
+  res.json({ ok: true });
+});
+
+app.post("/api/admin/vendors/delete", requireAdmin, (req, res) => {
+  const { vendorId } = req.body;
+  const data = readData();
+  const idx = data.vendors.findIndex(v => v.id === vendorId);
+  if (idx === -1) return res.status(404).json({ error: "Vendor not found." });
+  data.vendors.splice(idx, 1);
+  data.products = data.products.filter(p => p.vendorId !== vendorId);
+  writeData(data);
+  res.json({ ok: true });
+});
+
+app.post("/api/admin/products/delete", requireAdmin, (req, res) => {
+  const { id } = req.body;
+  const data = readData();
+  const idx = data.products.findIndex(p => p.id === id);
+  if (idx === -1) return res.status(404).json({ error: "Listing not found." });
+  data.products.splice(idx, 1);
+  writeData(data);
+  res.json({ ok: true });
 });
 
 // SPA fallback — the frontend does its own hash-based routing
