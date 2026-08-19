@@ -136,7 +136,16 @@ linear-gradient(180deg,transparent 40%,rgba(0,0,0,.75));}
 .notice{padding:15px 17px;border:1px solid rgba(255,90,31,.22);background:rgba(255,90,31,.05);border-radius:13px;color:#cdd3dd;font-size:12.5px}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{padding:22px;border:1px solid var(--line);border-radius:16px;background:#0a0c11;transition:.25s}.step:hover{border-color:rgba(255,90,31,.4);transform:translateY(-4px)}.step i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(255,90,31,.12);color:var(--ember);font-style:normal;font-weight:900;margin-bottom:12px;font-family:var(--font-display);font-size:13px}
 .footer{border-top:1px solid var(--line);padding:45px 0;color:var(--muted);font-size:12.5px;position:relative;z-index:1}.footergrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px}.footer h4{color:#fff;margin-bottom:13px;font-family:var(--font-display);font-size:12px;letter-spacing:1px}.footer a{display:block;margin:8px 0;transition:.2s}.footer a:hover{color:var(--ember)}
-.form{display:grid;gap:13px;max-width:650px}.input{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:11px;background:#08090d;color:#fff;outline:none;font-family:var(--font-body);font-weight:600;transition:.2s}.input:focus{border-color:rgba(255,90,31,.6);box-shadow:0 0 0 3px rgba(255,90,31,.1)}textarea.input{min-height:130px;resize:vertical}select.input{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) center,calc(100% - 15px) center;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.form{display:grid;gap:13px;max-width:650px}.input{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:11px;background:#08090d;color:#fff;outline:none;font-family:var(--font-body);font-weight:600;transition:.2s}.input:focus{border-color:rgba(255,90,31,.6);box-shadow:0 0 0 3px rgba(255,90,31,.1)}textarea.input{min-height:130px;resize:vertical}select.input{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) center,calc(100% - 15px) center;background-size:5px 5px,5px 5px;background-repeat:no-repeat}input[type=file].input{color-scheme:dark;padding:11px 12px;font-size:13px}input[type=file].input::file-selector-button{background:linear-gradient(135deg,var(--ember),var(--gold));border:0;color:#0a0700;font-weight:800;padding:9px 14px;border-radius:8px;margin-right:12px;font-size:12px;letter-spacing:.3px}
+.prod-thumb{width:100%;height:150px;object-fit:cover;border-radius:14px;margin-bottom:14px;display:block}
+.prod-thumb-placeholder{width:100%;height:150px;border-radius:14px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;font-size:38px;background:rgba(255,255,255,.03);border:1px dashed var(--line)}
+.mgmt-card{border:1px solid var(--line);border-radius:16px;padding:14px;background:rgba(255,255,255,.02);display:flex;flex-direction:column}
+.mgmt-thumb{width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:10px}
+.mgmt-thumb-placeholder{width:100%;height:120px;border-radius:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(255,255,255,.03)}
+.mgmt-actions{display:flex;gap:8px;margin-top:12px}
+.mgmt-actions button{flex:1;border-radius:9px;padding:9px 10px;font-size:12px;font-weight:800;border:0;letter-spacing:.3px}
+.mgmt-edit{background:linear-gradient(135deg,var(--ember),var(--gold));color:#0a0700}
+.mgmt-delete{background:rgba(255,77,103,.14);border:1px solid rgba(255,77,103,.5)!important;color:#ff9d9d}
 .adminbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.adminbar button{padding:10px 13px;border:1px solid var(--line);background:#0c0f16;color:#fff;border-radius:10px;font-weight:700;transition:.2s}.adminbar button:hover{border-color:var(--ember);background:rgba(255,90,31,.08)}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}.modal.show{display:flex}.modalbox{width:min(480px,100%);background:#0c0f16;border:1px solid var(--line);border-radius:20px;padding:25px;box-shadow:0 30px 100px #000;animation:in .3s ease}
 .modalbox h2{font-family:var(--font-display);font-size:20px;text-transform:uppercase}
@@ -580,7 +589,7 @@ body:after{
 
 <div class="modal" id="vendorLoginModal"><div class="modalbox"><h2>Vendor Login</h2><p class="sub" style="margin:8px 0 18px">Log in with the vendor account SY Academy gave you.</p><div class="form"><input class="input" id="vUsername" placeholder="Username"><input class="input" id="vPassword" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')vendorLogin()"><button class="cta" onclick="vendorLogin()">LOGIN</button><button class="ghost" onclick="closeVendorLoginModal()">CANCEL</button></div></div></div>
 
-<div class="modal" id="productModal"><div class="modalbox"><h2 id="productModalTitle">Add Account Listing</h2><p class="sub" style="margin:8px 0 18px">Fill in the account's details below.</p><div class="form"><input class="input" id="pfTitle" placeholder="Listing title (e.g. Max Level Account, Heroic Rank)"><textarea class="input" id="pfDesc" placeholder="Description — level, rank, skins, diamonds, etc."></textarea><input class="input" id="pfPrice" placeholder="Price (e.g. 15000)"><select class="input" id="pfStatus"><option value="available">Available</option><option value="sold">Sold</option></select><button class="cta" onclick="submitProductForm()">SAVE</button><button class="ghost" onclick="closeProductModal()">CANCEL</button></div></div></div>
+<div class="modal" id="productModal"><div class="modalbox"><h2 id="productModalTitle">Add Account Listing</h2><p class="sub" style="margin:8px 0 18px">Fill in the account's details below.</p><div class="form"><img id="pfImagePreview" style="display:none;width:100%;height:160px;object-fit:cover;border-radius:12px" alt=""><input class="input" type="file" accept="image/*" id="pfImage" onchange="previewProductImage(this)"><div id="pfImageRemoveWrap" style="display:none"><label style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:600"><input type="checkbox" id="pfRemoveImage"> Remove current picture</label></div><input class="input" id="pfTitle" placeholder="Listing title (e.g. Max Level Account, Heroic Rank)"><textarea class="input" id="pfDesc" placeholder="Description — level, rank, skins, diamonds, etc."></textarea><input class="input" id="pfPrice" placeholder="Price (e.g. 15000)"><select class="input" id="pfStatus"><option value="available">Available</option><option value="sold">Sold</option></select><button class="cta" onclick="submitProductForm()">SAVE</button><button class="ghost" onclick="closeProductModal()">CANCEL</button></div></div></div>
 
 <div class="modal" id="vendorAccountModal"><div class="modalbox"><h2>Create Vendor Account</h2><p class="sub" style="margin:8px 0 18px">Give this vendor their login and a contact link for buyers.</p><div class="form"><input class="input" id="vaUsername" placeholder="Vendor username"><input class="input" id="vaPassword" type="password" placeholder="Vendor password"><input class="input" id="vaStore" placeholder="Store / seller display name"><input class="input" id="vaContact" placeholder="Contact link (e.g. https://t.me/username)"><button class="cta" onclick="submitVendorAccount()">CREATE VENDOR</button><button class="ghost" onclick="closeVendorAccountModal()">CANCEL</button></div></div></div>
 <div class="toast" id="toast"></div>
@@ -658,13 +667,16 @@ function renderGraduateManage(){
   `</div>`;
 }
 function vendorName(vendorId){const v=data.vendors.find(v=>v.id===vendorId);return v?v.storeName:"Unknown vendor"}
+function productImg(p,cls,placeholderCls){
+ return p.image ? `<img class="${cls}" src="${p.image}" alt="${p.title}">` : `<div class="${placeholderCls}">🎮</div>`;
+}
 function renderMarketplace(){
  const box=document.getElementById("marketCards");
  if(!box)return;
  if(!data.products.length){box.innerHTML='<p class="sub">No accounts listed yet. Check back soon.</p>';return}
  box.innerHTML=data.products.map(p=>{
   const sold=p.status==="sold";
-  return `<article class="card"><div class="trackicon">🎮</div><h3>${p.title}</h3><p class="sub">${p.description||""}</p><div style="margin-top:14px;font-size:22px;font-weight:900;color:var(--gold2)">₦${Number(p.price).toLocaleString()}</div><div class="sub" style="margin-top:6px">Sold by ${vendorName(p.vendorId)}</div>${sold?'<div style="margin-top:14px;display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(255,77,103,.15);color:#ff9d9d;font-weight:800;font-size:11px;letter-spacing:1px">SOLD</div>':`<button class="cta" style="margin-top:16px" onclick="contactVendor('${p.id}')">CONTACT SELLER</button>`}</article>`;
+  return `<article class="card">${productImg(p,"prod-thumb","prod-thumb-placeholder")}<h3>${p.title}</h3><p class="sub">${p.description||""}</p><div style="margin-top:14px;font-size:22px;font-weight:900;color:var(--gold2)">₦${Number(p.price).toLocaleString()}</div><div class="sub" style="margin-top:6px">Sold by ${vendorName(p.vendorId)}</div>${sold?'<div style="margin-top:14px;display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(255,77,103,.15);color:#ff9d9d;font-weight:800;font-size:11px;letter-spacing:1px">SOLD</div>':`<button class="cta" style="margin-top:16px" onclick="contactVendor('${p.id}')">CONTACT SELLER</button>`}</article>`;
  }).join("");
 }
 function renderVendorDashboard(){
@@ -673,24 +685,23 @@ function renderVendorDashboard(){
  if(!isVendor){box.innerHTML="";return}
  const mine=data.products.filter(p=>p.vendorId===vendorInfo.id);
  if(!mine.length){box.innerHTML='<p class="sub">You have no listings yet. Tap "+ ADD ACCOUNT" to create one.</p>';return}
- box.innerHTML=`<div class="card" style="padding:16px">`+
-  mine.map(p=>{
-   const realIndex=data.products.findIndex(x=>x.id===p.id);
-   return `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 0;border-top:1px solid var(--line)"><span><b>${p.title}</b> — ₦${Number(p.price).toLocaleString()}<br><small class="sub" style="font-size:11px">${p.status==="sold"?"SOLD":"Available"}</small></span><span style="display:flex;gap:8px"><button class="memberedit" onclick="openProductModal('${p.id}')">Edit</button><button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="deleteProduct('${p.id}')">Delete</button></span></div>`;
-  }).join("")+
+ box.innerHTML=`<div class="grid3">`+
+  mine.map(p=>`<div class="mgmt-card">${productImg(p,"mgmt-thumb","mgmt-thumb-placeholder")}<b>${p.title}</b><span class="sub" style="margin-top:4px">₦${Number(p.price).toLocaleString()} • ${p.status==="sold"?"SOLD":"Available"}</span><div class="mgmt-actions"><button class="mgmt-edit" onclick="openProductModal('${p.id}')">Edit</button><button class="mgmt-delete" onclick="deleteProduct('${p.id}')">Delete</button></div></div>`).join("")+
   `</div>`;
 }
 function renderAdminVendorList(){
  const box=document.getElementById("adminVendorList");
  if(!box)return;
  if(!data.vendors.length){box.innerHTML='<p class="sub">No vendor accounts yet.</p>';return}
- box.innerHTML=data.vendors.map(v=>`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 0;border-top:1px solid var(--line)"><span><b>${v.storeName}</b> <small class="sub">@${v.username}</small><br><small class="sub" style="font-size:11px">${v.contact||"No contact set"}</small></span><button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="deleteVendorAccount('${v.id}')">Delete vendor</button></div>`).join("");
+ box.innerHTML=data.vendors.map(v=>`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:14px 0;border-top:1px solid var(--line)"><span><b>${v.storeName}</b> <small class="sub">@${v.username}</small><br><small class="sub" style="font-size:11px">${v.contact||"No contact set"}</small></span><button class="mgmt-delete" style="border-radius:9px;padding:9px 14px;font-weight:800;font-size:12px" onclick="deleteVendorAccount('${v.id}')">Delete vendor</button></div>`).join("");
 }
 function renderAdminProductModeration(){
  const box=document.getElementById("adminProductModeration");
  if(!box)return;
  if(!data.products.length){box.innerHTML='<p class="sub">No listings yet.</p>';return}
- box.innerHTML=data.products.map(p=>`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 0;border-top:1px solid var(--line)"><span><b>${p.title}</b> — ₦${Number(p.price).toLocaleString()}<br><small class="sub" style="font-size:11px">${vendorName(p.vendorId)} • ${p.status==="sold"?"SOLD":"Available"}</small></span><button class="memberedit" style="border-color:#ff5a5a;color:#ff9d9d" onclick="adminDeleteProduct('${p.id}')">Remove listing</button></div>`).join("");
+ box.innerHTML=`<div class="grid3">`+
+  data.products.map(p=>`<div class="mgmt-card">${productImg(p,"mgmt-thumb","mgmt-thumb-placeholder")}<b>${p.title}</b><span class="sub" style="margin-top:4px">₦${Number(p.price).toLocaleString()}</span><span class="sub" style="font-size:11px">${vendorName(p.vendorId)} • ${p.status==="sold"?"SOLD":"Available"}</span><div class="mgmt-actions"><button class="mgmt-delete" style="flex:none;width:100%" onclick="adminDeleteProduct('${p.id}')">Remove listing</button></div></div>`).join("")+
+  `</div>`;
 }
 function render(){
  animateCounter(document.getElementById("totalMembersCount"),data.totalMembers);
@@ -895,15 +906,52 @@ async function vendorLogout(){
  isVendor=false;vendorInfo=null;refreshAdminUI();location.hash="marketplace";toast("Logged out.")
 }
 let productEditId=null;
+let pendingProductImage=null;
+function resizeImageFile(file,maxDim,quality){
+ return new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+  reader.onerror=()=>reject(new Error("Couldn't read that image."));
+  reader.onload=()=>{
+   const img=new Image();
+   img.onerror=()=>reject(new Error("Couldn't read that image."));
+   img.onload=()=>{
+    let w=img.width,h=img.height;
+    if(w>h && w>maxDim){h=Math.round(h*maxDim/w);w=maxDim}
+    else if(h>maxDim){w=Math.round(w*maxDim/h);h=maxDim}
+    const canvas=document.createElement("canvas");
+    canvas.width=w;canvas.height=h;
+    canvas.getContext("2d").drawImage(img,0,0,w,h);
+    resolve(canvas.toDataURL("image/jpeg",quality));
+   };
+   img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+ });
+}
+async function previewProductImage(input){
+ const file=input.files&&input.files[0];
+ if(!file)return;
+ try{
+  pendingProductImage=await resizeImageFile(file,800,0.72);
+  const prev=document.getElementById("pfImagePreview");
+  prev.src=pendingProductImage;prev.style.display="block";
+ }catch(e){toast(e.message)}
+}
 function openProductModal(id){
  if(!isVendor){toast("Vendor login required.");return}
  productEditId=id||null;
+ pendingProductImage=null;
  const p=productEditId?data.products.find(x=>x.id===productEditId):null;
  document.getElementById("productModalTitle").textContent=p?"Edit Listing":"Add Account Listing";
  document.getElementById("pfTitle").value=p?p.title:"";
  document.getElementById("pfDesc").value=p?p.description:"";
  document.getElementById("pfPrice").value=p?p.price:"";
  document.getElementById("pfStatus").value=p?p.status:"available";
+ document.getElementById("pfImage").value="";
+ document.getElementById("pfRemoveImage").checked=false;
+ const prev=document.getElementById("pfImagePreview");
+ if(p&&p.image){prev.src=p.image;prev.style.display="block"}else{prev.style.display="none";prev.src=""}
+ document.getElementById("pfImageRemoveWrap").style.display=(p&&p.image)?"block":"none";
  document.getElementById("productModal").classList.add("show");
 }
 function closeProductModal(){document.getElementById("productModal").classList.remove("show")}
@@ -912,13 +960,18 @@ async function submitProductForm(){
  const description=document.getElementById("pfDesc").value.trim();
  const price=document.getElementById("pfPrice").value.trim();
  const status=document.getElementById("pfStatus").value;
+ const removeImage=document.getElementById("pfRemoveImage").checked;
  if(!title||!price){toast("Enter at least a title and price.");return}
+ const body={title,description,price,status};
+ if(pendingProductImage)body.image=pendingProductImage;
+ else if(removeImage)body.removeImage=true;
  try{
   if(productEditId){
-   await api("/api/vendor/products/edit",{method:"POST",body:JSON.stringify({id:productEditId,title,description,price,status})});
+   body.id=productEditId;
+   await api("/api/vendor/products/edit",{method:"POST",body:JSON.stringify(body)});
    toast("Listing updated.")
   }else{
-   await api("/api/vendor/products",{method:"POST",body:JSON.stringify({title,description,price})});
+   await api("/api/vendor/products",{method:"POST",body:JSON.stringify(body)});
    toast("Listing added.")
   }
   closeProductModal();await loadData();
@@ -1135,7 +1188,8 @@ document.querySelectorAll(".card, .step").forEach(el=>{
   mobile.innerHTML=`
     <a href="#home">HOME</a><a href="#about">ABOUT</a><a href="#training">TRAINING</a>
     <a href="#packages">PACKAGES</a><a href="#leaderboard">LEADERBOARD</a>
-    <a href="#graduates">GRADUATES</a><a href="#academy">ACADEMY</a>
+    <a href="#graduates">GRADUATES</a><a href="#marketplace">MARKETPLACE</a>
+    <a href="#academy">ACADEMY</a>
     <a href="#announcements">ANNOUNCEMENTS</a><a href="#contact">CONTACT</a>
     <button class="cta" onclick="register()">REGISTER NOW ↗</button>`;
   document.querySelector(".navin").appendChild(mobile);
